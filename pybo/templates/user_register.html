@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_register.css') }}">
+    <script defer src="{{ url_for('static', filename='js/user_register.js') }}"></script>
+</head>
+<body>
+    <header class="header">
+        
+    </header>
+    <main class="main-content">
+        <section class="register-section">
+            <h1>회원가입</h1>
+            <p>회원가입을 위해 정보를 입력해주세요.</p>
+            <form class="register-form" id="registerForm">
+                <div class="form-group">
+                    <label for="email">이메일 주소</label>
+                    <input type="email" id="email" name="email" placeholder="email@domain.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" name="password" placeholder="8자 이상 16자 이하의 숫자와 영문으로 구성" minlength ="8" maxlength="16" required>
+                </div>
+                <div class="form-group checkbox-group">
+                    <label for="agree">
+                        <input type="checkbox" id="agree" name="agree" required>
+                        이용약관 개인정보 수집 및 정보 이용에 동의합니다.
+                    </label>
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn" disabled>가입하기</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
