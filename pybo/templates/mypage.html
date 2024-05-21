@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mypage.css') }}">
+</head>
+<body>
+    <header class="header">
+        
+    </header>
+    <main class="main-content">
+        <section class="user-info">
+            <div class="user-header">
+                <h1>마이페이지</h1>
+                <button class="logout-btn">로그아웃</button>
+            </div>
+            <div class="user-details">
+                <div class="user-field">
+                    <label>닉네임</label>
+                    <span id="nickname">USER_NAME</span>
+                </div>
+                <div class="user-field">
+                    <label>이메일</label>
+                    <span id="email">USER_EMAIL</span>
+                </div>
+            </div>
+        </section>
+        <section class="main-section">
+            <ul class="mypage-nav">
+                <li><a href="./mypage/case">등록 피해 사례</a></li>
+                <li><a href="./mypage/pishing">등록 피싱 사이트</a></li>
+                <li><a href="#">고객센터</a></li>
+                <li><a href="#">허위신고 / 해결 사례 문의</a></li>
+                <li><a href="#">회원 탈퇴</a></li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

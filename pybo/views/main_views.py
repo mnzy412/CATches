@@ -21,4 +21,14 @@ def register():
 def login():
     return render_template('user_login.html')
 
+@bp.route('/mypage')
+def mypage():
+    return render_template('mypage.html')
 
+@bp.route('/mypage/case')
+def mypage_case():
+    return render_template('mypage_case.html')
+
+@bp.route('/mypage/pishing')
+def mypage_pishing():
+    return render_template('mypage_pishing.html')
