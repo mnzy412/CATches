@@ -1,0 +1,77 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    background-color: #FAF3FF;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+	height: calc(100vh - 100px);
+}
+
+.search-section {
+    background-color: #FAF3FF;
+    padding: 40px;
+    text-align: center;
+    margin-top: 200px;
+}
+
+.search-section h1 {
+    font-size: 45px;
+    margin-bottom: 20px;
+}
+
+.search-section p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: gray;
+}
+
+.case-search-form {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.phishing-search-form {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex;
+    gap: 5px;
+    width: 300px;
+}
+
+.form-group input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #FAF3FF;
+    border-radius: 5px;
+    font-size: 16px;
+    color: gray;
+}
+
+.submit-btn {
+    background-color: #7813C0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    width: 70px;
+}
+
+.submit-btn:disabled {
+    background-color: #CCCCCC; /* 비활성화 시 회색으로 보이도록 설정 */
+    cursor: not-allowed;
+}
+
+.submit-btn:hover {
+    background-color: #60109A;
+}
