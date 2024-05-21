@@ -1,0 +1,88 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    background-color: #FAF3FF;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+	height: calc(100vh - 100px);
+}
+
+.search-section {
+    background-color: #FAF3FF;
+    padding: 40px;
+    text-align: center;
+    margin-top: 200px;
+}
+
+.list-search-form {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.form-group {
+    /*
+    display: flex;
+    flex-direction: column;
+    align-items: flex;
+    */
+    gap: 5px;
+    width: 300px;
+}
+
+.form-group input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #FAF3FF;
+    border-radius: 5px;
+    font-size: 16px;
+    color: gray;
+}
+
+.submit-list {
+    background-color: #7813C0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    width: 70px;
+}
+ 
+    
+    
+    
+table {
+    border-collapse: collapse;
+    width: 1000px;
+    line-height: 2;
+
+    table-layout: fixed;
+    background: #ffffff;
+    border-radius: 8px;
+    border-style: solid;
+    border-color: #e0e0e0;
+    
+    padding: 24px;
+    overflow: hidden;
+    align-items: center;
+    margin-top: 30px;
+    
+}
+
+
+th, td
+{
+    height: 20px;
+    padding: 10px 20px 10px 20px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody > tr:hover
+{
+    background-color: #BDBDBD;
+}
