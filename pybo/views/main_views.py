@@ -21,4 +21,10 @@ def register():
 def login():
     return render_template('user_login.html')
 
+@bp.route('/case_info')
+def case_info():
+    return render_template('case_info.html')
 
+@bp.route('/phishing_info')
+def phishing_info():
+    return render_template('phishing_info.html')
