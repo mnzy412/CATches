@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>피해 사례 등록</title>
+    <meta name="description" content="피해 사례 등록 페이지">
+    <meta name="author" content="CATches">
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/case_info.css">
+    <script defer src="/static/js/case_info.js"></script>
+
+</head>
+<body>
+    <main>
+        <h1>피해 사례 등록</h1>
+        <form>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="bank_name">은행명</label>
+                    <input type="text" id="bank_name" name="bank_name">
+                </div>
+                <div class="form-group">
+                    <label for="bank_account">계좌번호</label>
+                    <input type="text" id="bank_account" name="bank_account">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="bank_nickname">명의자 성명</label>
+                    <input type="text" id="bank_nickname" name="bank_nickname">
+                </div>
+                <div class="form-group">
+                    <label for="suspect_phone">연락처</label>
+                    <input type="text" id="suspect_phone" name="suspect_phone">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="case_date">입금일</label>
+                    <input type="date" id="case_date" name="case_date">
+                </div>
+                <div class="form-group">
+                    <label for="case_price">입금 금액</label>
+                    <input type="number" id="case_price" name="case_price">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>피해 유형</label>
+                    <div class="radio-group">
+                        <input type="radio" id="online" name="case_type" value="online">
+                        <label for="online">온라인</label>
+                        <input type="radio" id="offline" name="case_type" value="offline">
+                        <label for="offline">오프라인</label>
+                        <input type="radio" id="other" name="case_type" value="other">
+                        <label for="other">기타</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>피해 발생 플랫폼 종류</label>
+                    <div class="radio-group">
+                        <input type="radio" id="sns" name="platform_type" value="sns">
+                        <label for="sns">SNS</label>
+                        <input type="radio" id="secondhand" name="platform_type" value="secondhand">
+                        <label for="secondhand">중고거래</label>
+                        <input type="radio" id="webstore" name="platform_type" value="webstore">
+                        <label for="webstore">웹스토어</label>
+                        <input type="radio" id="platform_other" name="platform_type" value="platform_other">
+                        <label for="platform_other">기타</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="case_item">거래 물품명</label>
+                    <input type="text" id="case_item" name="case_item">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phishing_url">사기 게시물 URL</label>
+                    <input type="url" id="phishing_url" name="phishing_url">
+                </div>
+                <div class="form-group">
+                    <label for="suspect_key">용의자 사용 ID</label>
+                    <input type="text" id="suspect_key" name="suspect_key">
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label for="case_description">사건 개요</label>
+                <textarea id="case_description" name="case_description" rows="4"></textarea>
+            </div>
+            <div class="form-group button-group">
+                <button type="submit">사건 등록</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
