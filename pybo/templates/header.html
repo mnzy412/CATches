@@ -16,11 +16,11 @@
             <div class=header-wrapper>
                 <ul>
                     <!--현재 페이지 위치 색 바꾸려면 <li></li>지우고 <span class="li-color"></span>으로 교체-->
-                    <li><a href="home.html">홈</a></li>
-                    <li><a href="case_info.html">피해 사례 등록</a></li>
-                    <li><a href="case_search.html">피해 사례 조회</a></li>
-                    <li><a href="phishing_info.html">피싱 사이트 등록</a></li>
-                    <li><a href="phishing_search.html">피싱 사이트 조회</a></li>
+                    <li><a href="{{ url_for('main.index') }}">홈</a></li>
+                    <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
+                    <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
+                    <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
+                    <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
                 </ul>
                 <div class=login-btn>
                     <span  class="login-text"><a href="user_login.html">로그인</a></span>

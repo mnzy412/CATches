@@ -38,7 +38,7 @@ def case_search():
     return render_template('case_search.html')
 
 @bp.route('/search/p')
-def pishing_search():
+def phishing_search():
     return render_template('phishing_search.html')
 
 @bp.route('/case_list')
