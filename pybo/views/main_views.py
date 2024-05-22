@@ -37,3 +37,15 @@ def mypage_pishing():
 @bp.route('/search/p')
 def pishing_search():
     return render_template('phishing_search.html')
+
+@bp.route('/case_detail')
+def case_detail():
+    return render_template('case_detail.html')
+
+@bp.route('/solve_case_detail')
+def solve_case_detail():
+    return render_template('solve_case_detail.html')
+
+@bp.route('/phishing_detail')
+def phishing_detail():
+    return render_template('phishing_detail.html')
