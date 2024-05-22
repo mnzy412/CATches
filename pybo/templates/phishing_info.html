@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>피싱 사이트 등록</title>
+    <meta name="description" content="피싱 사이트 등록 페이지">
+    <meta name="author" content="CATches">
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/phishing_info.css">
+    <script defer src="/static/js/phishing_info.js"></script>
+
+</head>
+<body>
+    <main>
+        <h1>피싱 사이트 등록</h1>
+        <form id="phishingForm">
+            <div class="form-group">
+                <label for="site_url">피싱 사이트 URL</label>
+                <input type="url" id="site_url" name="site_url" required>
+            </div>
+            <div class="form-group">
+                <label for="site_name">피싱 사이트 이름</label>
+                <input type="text" id="site_name" name="site_name" required>
+            </div>
+            <div class="form-group">
+                <label>피해 유형</label>
+                <div class="radio-group">
+                    <input type="radio" id="personal_info_leak" name="damage_type" value="personal_info_leak" required>
+                    <label for="personal_info_leak">개인정보 유출</label>
+                    <input type="radio" id="malware_infection" name="damage_type" value="malware_infection">
+                    <label for="malware_infection">악성코드 감염</label>
+                    <input type="radio" id="financial_damage" name="damage_type" value="financial_damage">
+                    <label for="financial_damage">금전적 피해</label>
+                    <input type="radio" id="other" name="damage_type" value="other">
+                    <label for="other">기타</label>
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label for="site_content">사건 개요</label>
+                <textarea id="site_content" name="site_content" rows="4" required></textarea>
+            </div>
+            <div class="form-group button-group">
+                <button type="submit">피싱 사이트 등록</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
