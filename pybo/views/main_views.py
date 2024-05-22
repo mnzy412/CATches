@@ -49,3 +49,11 @@ def solve_case_detail():
 @bp.route('/phishing_detail')
 def phishing_detail():
     return render_template('phishing_detail.html')
+
+@bp.route('/case_info')
+def case_info():
+    return render_template('case_info.html')
+
+@bp.route('/phishing_info')
+def phishing_info():
+    return render_template('phishing_info.html')
