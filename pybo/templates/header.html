@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>홈</title>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./static/css/home.css">
+    <!--바로 밑줄처럼 header.css 경로 각 html에 넣어줘야 됨-->
     <link rel="stylesheet" href="./static/css/header.css">
     
 </head>
 <body>
+    <!-- <header> 태그 안에 내용만 각 html에 넣어줘야 헤더(네비게이션바)가 생김-->
     <header class="header">
         <div  class="catches-logo"></div>
             <div class=header-wrapper>
                 <ul>
-                    <span class="li-color"><a href="home.html">홈</a></span>
+                    <!--현재 페이지 위치 색 바꾸려면 <li></li>지우고 <span class="li-color"></span>으로 교체-->
+                    <li><a href="home.html">홈</a></li>
                     <li><a href="case_info.html">피해 사례 등록</a></li>
                     <li><a href="case_search.html">피해 사례 조회</a></li>
                     <li><a href="phishing_info.html">피싱 사이트 등록</a></li>
@@ -25,18 +27,5 @@
                 </div>
             </div>
     </header>
-    <main class="home-main">
-        <div  class="catches-cat"></div>
-        <span  class="home-text">캣치스와 함께 안전한 어쩌구 저쩌구</span>
-        <section  class="white-section">
-            <div  class="white-box">
-                <span  class="box-text">회원이 되어 범죄자 잡기에 동참하세여</span>
-            </div>
-        </section>
-        <div class=purple-btn>
-            <span  class="btn-text"><a href="{{ url_for('main.register') }}">회원가입</a></span>
-        </div>
-
-    </main>
 </body>
 </html>

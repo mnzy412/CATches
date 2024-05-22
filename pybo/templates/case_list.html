@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>피해 사례 조회</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/case_list.css">
+    <link rel="stylesheet" href="./static/css/header.css">
+    
+</head>
+<body>
+    <header class="header">
+        <div  class="catches-logo"></div>
+            <div class=header-wrapper>
+                <ul>
+                    <li><a href="home.html">홈</a></li>
+                    <li><a href="case_info.html">피해 사례 등록</a></li>
+                    <span class="li-color"><a href="case_search.html">피해 사례 조회</a></span>
+                    <li><a href="phishing_info.html">피싱 사이트 등록</a></li>
+                    <li><a href="phishing_search.html">피싱 사이트 조회</a></li>
+                </ul>
+                <div class=login-btn>
+                    <span  class="login-text">로그인</span>
+                </div>
+            </div>
+    </header>
+    <main class="main-content">
+        <section class="search-section">
+          
+            <form class="list-search-form" id="ListSearchForm">
+                <div class="form-group">
+                    <input type="text" id="caseList" name="caseList" placeholder="사례" required>
+                </div>
+                <button type="submit" class="submit-list" id="submitList">검색</button>  
+            </form>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>계좌번호</th>
+                        <th>명의자 성명</th>
+                        <th>피해 유형</th>
+                        <th>등록일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>우리 2021111</td>
+                        <td>김ㅇㅇ</td>
+                        <td>온라인</td>
+                        <td>2024.05.21</td>
+                    </tr>
+                    <tr>
+                        <td>우리 2021111</td>
+                        <td>김ㅇㅇ</td>
+                        <td>온라인</td>
+                        <td>2024.05.21</td>
+                    </tr>
+                    <tr>
+                        <td>우리 2021111</td>
+                        <td>김ㅇㅇ</td>
+                        <td>온라인</td>
+                        <td>2024.05.21</td>
+                    </tr>
+                    <tr>
+                        <td>우리 2021111</td>
+                        <td>김ㅇㅇ</td>
+                        <td>온라인</td>
+                        <td>2024.05.21</td>
+                    </tr>
+                    <tr>
+                        <td>우리 2021111</td>
+                        <td>김ㅇㅇ</td>
+                        <td>온라인</td>
+                        <td>2024.05.21</td>
+                    </tr>
+                </tbody>
+            </table> 
+            
+            
+        </section>
+        
+
+    </main>
+</body>
+</html>

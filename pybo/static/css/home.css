@@ -1,0 +1,99 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    background-color: #FAF3FF;
+}
+
+.home-main {
+    display: flex;
+    justify-content: center;
+	height: calc(100vh - 100px);
+}
+
+.catches-cat {
+    width:660px;
+	height:561px;
+	position:absolute;
+	left:723px;
+	top:250px;
+	background-image:url(/static/img/catches-cat.png);
+	background-repeat:no-repeat;
+	background-size:cover;
+}
+
+.home-text {
+    font-family: 'Inter', sans-serif;
+    color:rgba(0, 0, 0, 1);
+	width:650px;
+	height:192px;
+	position:absolute;
+	left:114px;
+	top:441px;
+	text-align:left;
+	font-size:64px;
+	letter-spacing:0;
+    font-weight: 700;
+}
+
+.white-section {
+    width:412px;
+	height:62px;
+	position:absolute;
+	left:114px;
+	top:672px;
+}
+
+.white-box {
+    box-shadow:0px 1px 2px rgba(0, 0, 0, 0.05000000074505806);
+	background-color:rgba(255, 255, 255, 1);
+	width:428px;
+	height:62px;
+	position:absolute;
+	left:-8px;
+	top:0px;
+	border-top-left-radius:8px;
+	border-top-right-radius:8px;
+	border-bottom-left-radius:8px;
+	border-bottom-right-radius:8px;
+}
+
+.box-text {
+	color:rgba(0, 0, 0, 1);
+	width:343px;
+	height:30px;
+	position:absolute;
+	left:16px;
+	top:16px;
+	font-family:Inter;
+	text-align:left;
+	font-size:20px;
+	letter-spacing:0;
+}
+
+.purple-btn {
+	box-shadow:0px 1px 2px rgba(0, 0, 0, 0.05000000074505806);
+	background-color:rgba(120.00000044703484, 19.0000007674098, 192.00000375509262, 1);
+	width:106px;
+	height:62px;
+	position:absolute;
+	left:563px;
+	top:672px;
+	border-top-left-radius:8px;
+	border-top-right-radius:8px;
+	border-bottom-left-radius:8px;
+	border-bottom-right-radius:8px;
+}
+
+.btn-text {
+		/* 회원가입 */
+		color:rgba(255, 255, 255, 1);
+		width:74px;
+		height:30px;
+		position:absolute;
+		left:16px;
+		top:16px;
+		font-family:Inter;
+		text-align:left;
+		font-size:18px;
+		letter-spacing:0;
+}
