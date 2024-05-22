@@ -33,10 +33,17 @@ def mypage_case():
 def mypage_pishing():
     return render_template('mypage_pishing.html')
 
+@bp.route('/search/c')
+def case_search():
+    return render_template('case_search.html')
 
 @bp.route('/search/p')
 def pishing_search():
     return render_template('phishing_search.html')
+
+@bp.route('/case_list')
+def case_list():
+    return render_template('case_list.html')
 
 @bp.route('/case_detail')
 def case_detail():
