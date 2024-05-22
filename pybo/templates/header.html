@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>홈</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+    <!--바로 밑줄처럼 header.css 경로 각 html에 넣어줘야 됨-->
+    <link rel="stylesheet" href="./static/css/header.css">
+    
+</head>
+<body>
+    <!-- <header> 태그 안에 내용만 각 html에 넣어줘야 헤더(네비게이션바)가 생김-->
+    <header class="header">
+        <div  class="catches-logo"></div>
+            <div class=header-wrapper>
+                <ul>
+                    <!--현재 페이지 위치 색 바꾸려면 <li></li>지우고 <span class="li-color"></span>으로 교체-->
+                    <li><a href="home.html">홈</a></li>
+                    <li><a href="case_info.html">피해 사례 등록</a></li>
+                    <li><a href="case_search.html">피해 사례 조회</a></li>
+                    <li><a href="phishing_info.html">피싱 사이트 등록</a></li>
+                    <li><a href="phishing_search.html">피싱 사이트 조회</a></li>
+                </ul>
+                <div class=login-btn>
+                    <span  class="login-text"><a href="user_login.html">로그인</a></span>
+                </div>
+            </div>
+    </header>
+</body>
+</html>
