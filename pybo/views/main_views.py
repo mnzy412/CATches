@@ -30,8 +30,8 @@ def mypage_case():
     return render_template('mypage_case.html')
 
 @bp.route('/mypage/pishing')
-def mypage_pishing():
-    return render_template('mypage_pishing.html')
+def mypage_phishing():
+    return render_template('mypage_phishing.html')
 
 @bp.route('/search/c')
 def case_search():
