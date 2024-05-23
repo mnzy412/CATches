@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const phishingInfoValue = phishingInfoInput.value.trim();
 
         // 정규 표현식 검증
-        const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-]*)*$/; // URL 형식
+        const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-]*)*$/; // http 또는 https URL 형식
         const nameRegex = /^[가-힣a-zA-Z\s]+$/; // 한글과 영어만
 
         const isUrlValid = urlRegex.test(phishingInfoValue);
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const phishingInfoValue = phishingInfoInput.value.trim();
 
         // 입력값 검증
-        const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-]*)*$/; // URL 형식
+        const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-]*)*$/; // http 또는 https URL 형식
         const nameRegex = /^[가-힣a-zA-Z\s]+$/; // 한글과 영어만
 
         const isUrlValid = urlRegex.test(phishingInfoValue);
