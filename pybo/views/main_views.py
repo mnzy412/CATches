@@ -1,7 +1,17 @@
 from flask import Blueprint, render_template
+import pymysql
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
+db = pymysql.connect(host='localhost', user='root', password='root', db='catches', charset='utf8')
+cur = db.cursor()
+
+# sql = "SELECT * FROM bank_code"
+# cur.execute(sql)
+
+# data_list = cur.fetchall()
+
+# print(data_list)
 
 @bp.route('/hello')
 def hello_pybo():
