@@ -5,14 +5,17 @@ body {
     padding: 0;
     color: #333;
 }
-
-header {
+    /* 
+    header {
     background-color: #000000;
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+    
+    */
+
 
 header h1 {
     margin: 0;

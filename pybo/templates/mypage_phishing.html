@@ -5,20 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>등록 사기 사례</title>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/mypage_pishing.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mypage_phishing.css') }}" >
    
 </head>
 <body>
     <header class="header">
-       
+        <div  class="catches-logo"></div>
+        <div class=header-wrapper>
+            <ul>                    
+                <li><a href="{{ url_for('main.index') }}">홈</a></li>
+                <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
+                <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
+                <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
+                <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
+            </ul>
+            <div class=login-btn>
+                <span  class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
+            </div>
+        </div>
     </header>
     <main class="main-content">
-        <section class="pishing-info">
-            <div class="pishing-header">
+        <section class="phishing-info">
+            <div class="phishing-header">
                 <h1>등록 피싱 사이트</h1>
         </section>
-        <section class="pishing-section">
-            <table class="pishing-table">
+        <section class="phishing-section">
+            <table class="phishing-table">
                 <thead>
                     <tr>
                         <th>계좌번호</th>

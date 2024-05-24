@@ -4,14 +4,6 @@ body {
     background-color: #FAF3FF;
 }
 
-.header {
-    background-color: #000000;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .main-content {
     display: flex;
     flex-direction: column;
@@ -19,7 +11,7 @@ body {
     padding: 40px 20px;
 }
 
-.pishing-info {
+.phishing-info {
     border-radius: 10px;
     padding: 20px;
     width: 100%;
@@ -28,13 +20,13 @@ body {
    
 }
 
-.pishing-header {
+.phishing-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.pishing-info h1 {
+.phishing-info h1 {
     font-size: 32px;
 }
 
@@ -66,7 +58,7 @@ body {
     color: #333333;
 }
 
-.pishing-section {
+.phishing-section {
     background-color: #FFFFFF;
     border: 1px solid #E0E0E0;
     border-radius: 10px;
@@ -76,22 +68,22 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.pishing-table {
+.phishing-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.pishing-table th, .pishing-table td {
+.phishing-table th, .phishing-table td {
     border: 1px solid #E0E0E0;
     padding: 10px;
     text-align: left;
 }
 
-.pishing-table th {
+.phishing-table th {
     background-color: #F8F4FF;
     font-weight: 700;
 }
 
-.pishing-table td {
+.phishing-table td {
     background-color: #FFFFFF;
 }

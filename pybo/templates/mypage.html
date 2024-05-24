@@ -6,11 +6,24 @@
     <title>마이페이지</title>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mypage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <script defer src="{{ url_for('static', filename='js/mypage.js') }}"></script>
 </head>
 <body>
     <header class="header">
-        <!-- 헤더 콘텐츠 -->
+        <div  class="catches-logo"></div>
+            <div class=header-wrapper>
+                <ul>                    
+                    <li><a href="{{ url_for('main.index') }}">홈</a></li>
+                    <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
+                    <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
+                    <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
+                    <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
+                </ul>
+                <div class=login-btn>
+                    <span  class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
+                </div>
+            </div>
     </header>
     <main class="main-content">
         <section class="user-info">
@@ -32,7 +45,7 @@
         <section class="main-section">
             <ul class="mypage-nav">
                 <li><a href="./mypage/case">등록 피해 사례</a></li>
-                <li><a href="./mypage/pishing">등록 피싱 사이트</a></li>
+                <li><a href="./mypage/phishing">등록 피싱 사이트</a></li>
                 <li><a href="#" id="customer-support-link">고객센터</a></li>
                 <li><a href="#" id="customer-question-link" >허위신고 / 해결 사례 문의</a></li>
                 <li><a href="#">회원 탈퇴</a></li>

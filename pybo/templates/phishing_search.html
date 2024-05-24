@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>피싱 사이트 조회</title>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/search.css">
-    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     
 </head>
 <body>
@@ -14,14 +14,14 @@
         <div  class="catches-logo"></div>
             <div class=header-wrapper>
                 <ul>
-                    <li><a href="home.html">홈</a></li>
-                    <li><a href="case_info.html">피해 사례 등록</a></li>
-                    <li><a href="case_search.html">피해 사례 조회</a></li>
-                    <li><a href="phishing_info.html">피싱 사이트 등록</a></li>
-                    <span class="li-color"><a href="phishing_search.html">피싱 사이트 조회</a></span>
+                    <li><a href="{{ url_for('main.index') }}">홈</a></li>
+                    <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
+                    <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
+                    <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
+                    <span class="li-color"><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></span>
                 </ul>
                 <div class=login-btn>
-                    <span  class="login-text">로그인</span>
+                    <span  class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
                 </div>
             </div>
     </header>

@@ -4,14 +4,6 @@ body {
     background-color: #FAF3FF;
 }
 
-.header {
-    background-color: #000000;
-    padding: 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .main-content {
     display: flex;
     justify-content: center;
