@@ -3,27 +3,49 @@ import pymysql
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
-db = pymysql.connect(host='localhost', user='root', password='root', db='catchesdb', charset='utf8')
+# 데이터베이스 연결 설정
+db = pymysql.connect(
+    host='localhost', 
+    user='root', 
+    password='root', 
+    db='catchesdb', 
+    charset='utf8'
+)
 cursor = db.cursor()
 
-#sql 내용 넣고 쿼리 돌아가는지 확인
-# sql = "SELECT * FROM bank_code"
-# cursor.execute(sql)
+# # 데이터베이스 연결 테스트용 데이터 삽입
+# def insert_test_data():
+#     try:
+#         sql = "INSERT INTO bank_code (bank_code, bank_name) VALUES (%s, %s)"
+#         cursor.execute(sql, ('123', 'Test Bank'))
+#         db.commit()
+#     except pymysql.MySQLError as e:
+#         print(f"Error: {e}")
 
-# data_list = cursor.fetchall()
+# # 데이터베이스에서 데이터 조회
+# def fetch_test_data():
+#     try:
+#         sql = "SELECT * FROM bank_code"
+#         cursor.execute(sql)
+#         data_list = cursor.fetchall()
+#         print(data_list)
+#         return data_list
+#     except pymysql.MySQLError as e:
+#         print(f"Error: {e}")
+#         return []
 
+# # 데이터 삽입 및 조회 테스트
+# insert_test_data()
+# data_list = fetch_test_data()
 # print(data_list)
 
 @bp.route('/hello')
 def hello_pybo():
     return 'Hello, catches'
 
-
 @bp.route('/')
 def index():
-
     return render_template('home.html')
-
 
 @bp.route('/register')
 def register():
