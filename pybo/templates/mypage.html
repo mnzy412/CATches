@@ -7,9 +7,20 @@
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mypage.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <script defer src="{{ url_for('static', filename='js/mypage.js') }}"></script>
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
     <header class="header">
         <div class="catches-logo"></div>
         <div class="header-wrapper">
@@ -21,31 +32,37 @@
                 <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
             </ul>
             <div class="login-btn">
-                <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
+                {% if 'user_id' in session %}
+                    <span class="login-text"><a href="{{ url_for('main.mypage') }}">마이페이지</a></span>
+                    <span class="login-text"><a href="{{ url_for('main.logout') }}">로그아웃</a></span>
+                {% else %}
+                    <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
+                {% endif %}
             </div>
         </div>
     </header>
+
     <main class="main-content">
         <section class="user-info">
             <div class="user-header">
                 <h1>마이페이지</h1>
-                <button class="logout-btn">로그아웃</button>
             </div>
             <div class="user-details">
                 <div class="user-field">
                     <label>닉네임</label>
-                    <span id="nickname">USER_NAME</span>
+                    <span id="nickname">{{ user_nick }}</span>
                 </div>
                 <div class="user-field">
                     <label>이메일</label>
-                    <span id="email">USER_EMAIL</span>
+                    <span id="email">{{ user_email }}</span>
                 </div>
             </div>
         </section>
+
         <section class="main-section">
             <ul class="mypage-nav">
-                <li><a href="./mypage/case">등록 피해 사례</a></li>
-                <li><a href="./mypage/pishing">등록 피싱 사이트</a></li>
+                <li><a href="{{ url_for('main.mypage_case') }}">등록 피해 사례</a></li>
+                <li><a href="{{ url_for('main.mypage_phishing') }}">등록 피싱 사이트</a></li>
                 <li><a href="#" id="customer-support-link">고객센터</a></li>
                 <li><a href="#" id="customer-question-link">허위신고 / 해결 사례 문의</a></li>
                 <li><a href="#" id="info-view-link">정보조회</a></li>
@@ -53,30 +70,5 @@
             </ul>
         </section>
     </main>
-
-    <div id="info-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>개인 정보</h2>
-            <p><strong>이름:</strong> <span id="user-name">USER_NAME</span></p>
-            <p><strong>전화번호:</strong> <span id="user-phone">USER_PHONE</span></p>
-        </div>
-    </div>
-
-    <div id="support-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>고객센터</h2>
-            <p>이것은 고객센터다.</p>
-        </div>
-    </div>
-
-    <div id="question-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>문의 안내</h2>
-            <p>이메일 보내라: mnzy412@gmail.com</p>
-        </div>
-    </div>
 </body>
 </html>
