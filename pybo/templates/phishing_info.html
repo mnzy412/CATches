@@ -16,18 +16,18 @@
                 <li><a href="{{ url_for('main.index') }}">홈</a></li>
                 <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
                 <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
-                <span class="li-color"><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></span>
-                <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
+                <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
+                <span class="li-color"><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></span>
             </ul>
             <div class=login-btn>
-                <span  class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
+                <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
             </div>
         </div>
     </header>
     <main class="main-content">
         <section>
-            <h1>피싱 사이트 등록</h1>
             <form>
+                <h1>피싱 사이트 등록</h1>
                 <div class="form-group full-width">
                     <label for="site_url" class="fixed-label">피싱 사이트 URL</label>
                     <input type="text" id="site_url" name="site_url" placeholder="https://www.catcheese.com/" required aria-label="피싱 사이트 URL">
@@ -37,13 +37,9 @@
                     <input type="text" id="site_name" name="site_name" placeholder="CATcheese" required aria-label="피싱 사이트 이름">
                 </div>
                 <div class="form-group full-width">
-                    <label for="case_date" class="fixed-label">입금일</label>
-                    <input type="date" id="case_date" name="case_date" required aria-label="입금일">
-                </div>
-                <div class="form-group full-width">
                     <label><strong>피해 유형</strong></label>
                     <div class="radio-group">
-                        <label><input type="radio" id="personal_info_leak" name="case_type" value="personal_info_leak" checked> 개인정보 유출</label>
+                        <label><input type="radio" id="personal_info_leak" name="case_type" value="personal_info_leak"> 개인정보 유출</label>
                         <label><input type="radio" id="malicious_code" name="case_type" value="malicious_code"> 악성코드 감염</label>
                         <label><input type="radio" id="financial_damage" name="case_type" value="financial_damage"> 금전적 피해</label>
                         <label><input type="radio" id="other" name="case_type" value="other"> 기타</label>
@@ -53,8 +49,8 @@
                     <label for="site_content" class="fixed-label">사건 개요</label>
                     <textarea id="site_content" name="site_content" rows="10" placeholder="catches인 줄 알았는데 catcheese예요!!" required aria-label="사건 개요"></textarea>
                 </div>
+                <button type="submit">피싱 사이트 등록</button>
             </form>
-            <button type="submit" class="submit-btn" id="InfoSubmitBtn" disabled>피싱 사이트 등록하기</button>
         </section>
     </main>
 </body>

@@ -30,30 +30,38 @@ nav a {
     font-size: 1rem;
 }
 
+button {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
 .main-content {
     display: flex;
     justify-content: center;
     height: calc(100vh - 100px);
-    margin-top: 140px; /* 헤더 높이만큼의 여백 추가 */
-}
-
-section h1 {
-    font-size: 36px;
-    color: #000;
-    margin-bottom: 50px; /* 제목 아래 간격 추가 */
-    text-align: center;
+    margin-top: 150px; /* 헤더 높이만큼의 여백 추가 */
 }
 
 form {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.3rem; /* 간격을 1.5배로 늘림 */
+    gap: 1.5rem; /* 간격을 1.5배로 늘림 */
     background-color: transparent;
 }
 
-form h2 {
-    margin-top: 0;
-    color: rgba(120, 19, 192, 1);
+.header-container {
+    grid-column: span 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+form h1 {
+    font-size: 36px;
+    margin-bottom: 0; /* 간격을 줄이기 위해 추가 */
 }
 
 .form-group {
@@ -206,28 +214,26 @@ label[for="platform_type"] {
     font-weight: bold;
 }
 
-.submit-btn {
-    background-color: #7813C0;
-    color: white;
-    padding: 20px 0;
+/* 사건 개요 텍스트 영역의 스타일 조정 */
+#case_description {
+    grid-column: span 2;
+    width: 100%;
+}
+
+button[type="submit"] {
+    grid-column: 2; /* 오른쪽에 정렬되도록 변경 */
+    justify-self: end; /* 버튼을 오른쪽 끝으로 정렬 */
+    background-color: rgba(120, 19, 192, 1);
+    color: #fff;
     border: none;
-    border-radius: 5px;
-    font-size: 18px;
-    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
     cursor: pointer;
-    width: 100%; /* 최대 너비 설정 */
-    margin-top: 30px; /* 여백 추가 */
-    display: block;
-    margin-left: auto; /* 오른쪽으로 정렬 */
-    margin-right: auto; /* 가운데 정렬 */
-    display: block;
+    font-size: 1rem;
+    transition: background-color 0.3s;
 }
 
-.submit-btn:disabled {
-    background-color: #CCCCCC; /* 비활성화 시 회색으로 보이도록 설정 */
-    cursor: not-allowed; 
+button[type="submit"]:hover {
+    background-color: rgba(100, 0, 150, 1);
 }
 
-.submit-btn:hover {
-    background-color: #60109A;
-}
