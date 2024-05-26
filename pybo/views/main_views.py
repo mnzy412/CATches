@@ -3,7 +3,7 @@ import pymysql
 import random
 import string
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
@@ -54,7 +54,6 @@ def register():
 
     return render_template('user_register.html')
 
-
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -91,7 +90,6 @@ def logout():
     #flash('로그아웃되었습니다.', 'success')
     return redirect(url_for('main.index'))
 
-
 @bp.route('/mypage')
 def mypage():
     if 'user_id' not in session:
@@ -100,7 +98,6 @@ def mypage():
     user_nick = session.get('user_nick')
     user_email = session.get('user_email')
     return render_template('mypage.html', user_nick=user_nick, user_email=user_email)
-
 
 @bp.route('/mypage/case')
 def mypage_case():
@@ -134,6 +131,47 @@ def user_info():
     except pymysql.MySQLError as e:
         return {'error': str(e)}, 500
 
+@bp.route('/withdraw', methods=['GET', 'POST'])
+def user_withdraw():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        try:
+            sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
+            cursor.execute(sql, (email,))
+            user = cursor.fetchone()
+            
+            if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
+                return render_template('withdraw_confirm.html', email=email)
+            else:
+                flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
+        except pymysql.MySQLError as e:
+            flash(f"탈퇴 처리 중 오류가 발생했습니다: {e}", 'danger')
+    
+    return render_template('user_withdraw.html')
+
+@bp.route('/withdraw_confirm', methods=['POST'])
+def withdraw_confirm():
+    if 'user_id' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect(url_for('main.login'))
+    
+    if 'agree' in request.form:
+        user_id = session['user_id']
+        try:
+            sql = "UPDATE users SET status = 'deleted', deleted_at = %s WHERE user_key = %s"
+            cursor.execute(sql, (datetime.now(), user_id))
+            db.commit()
+            flash('회원 탈퇴가 성공적으로 처리되었습니다. 3일 내에 로그인하면 계정이 활성화됩니다.', 'success')
+            return redirect(url_for('main.logout'))
+        except pymysql.MySQLError as e:
+            db.rollback()
+            flash(f"탈퇴 처리 중 오류가 발생했습니다: {e}", 'danger')
+    else:
+        flash('탈퇴를 완료하려면 동의해주셔야 합니다.', 'danger')
+
+    return redirect(url_for('main.user_withdraw'))
 
 @bp.route('/search/c')
 def case_search():
