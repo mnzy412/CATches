@@ -7,19 +7,9 @@
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mypage.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <script defer src="{{ url_for('static', filename='js/mypage.js') }}"></script>
 </head>
 <body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul class="flashes">
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
 
     <header class="header">
         <div class="catches-logo"></div>
@@ -40,9 +30,11 @@
                 {% endif %}
             </div>
         </div>
+
     </header>
 
     <main class="main-content">
+    
         <section class="user-info">
             <div class="user-header">
                 <h1>마이페이지</h1>
