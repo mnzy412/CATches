@@ -6,24 +6,47 @@
     <title>로그인</title>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <script defer src="{{ url_for('static', filename='js/user_login.js') }}"></script>
 </head>
 <body>
     <header class="header">
-        
+        <div class="catches-logo"></div>
+        <div class="header-wrapper">
+            <ul>                    
+                <li><a href="{{ url_for('main.index') }}">홈</a></li>
+                <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
+                <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
+                <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
+                <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
+            </ul>
+            <div class="login-btn">
+                <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
+            </div>
+        </div>
     </header>
     <main class="main-content">
         <section class="login-section">
             <h1>로그인</h1>
             <p>로그인을 위해 정보를 입력해주세요.</p>
-            <form class="login-form" id="loginForm">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+            <form class="login-form" id="loginForm" action="{{ url_for('main.login') }}" method="post">
                 <div class="form-group">
                     <label for="email">이메일 주소</label>
                     <input type="email" id="email" name="email" placeholder="email@domain.com" required>
                 </div>
                 <div class="form-group">
                     <label for="password">비밀번호</label>
-                    <input type="password" id="password" name="password"  maxlength="16" required>
+                    <input type="password" id="password" name="password" maxlength="16" required>
                 </div>
                 <div class="form-group checkbox-group">
                     <label for="remember">
@@ -31,7 +54,7 @@
                         로그인 상태 유지
                     </label>
                 </div>
-                <button type="submit" class="submit-btn" id="submitBtn" disabled>로그인하기</button>
+                <button type="submit" class="submit-btn" id="submitBtn">로그인하기</button>
             </form>
             <p>CATches가 처음이세요? <a href="{{ url_for('main.register') }}">회원가입</a></p>
         </section>

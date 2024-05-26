@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>피해 사례 상세 조회 - 해결</title>
+    <title>피해 사례 상세 조회 - 수사 중</title>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/solve_case_detail.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/check_case_detail.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
 </head>
 <body>
@@ -29,15 +29,7 @@
             <form>
                 <div class="header-container">
                     <h2>사례 등록일: 2024년 5월 1일</h2>
-                    <button type="submit">해결</button>
-                </div>
-                <div class="form-group">
-                    <label for="police-name" class="fixed-label">담당 경찰</label>
-                    <input type="text" id="police-name" name="police-name" placeholder="홍길동" required aria-label="담당 경찰" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="police-location" class="fixed-label">관할지역</label>
-                    <input type="text" id="police-location" name="police-location" placeholder="서울" required aria-label="관할지역" readonly>
+                    <button type="submit">수사 중</button>
                 </div>
                 <div class="form-group">
                     <label for="bank-name" class="fixed-label">은행명</label>

@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>피해 사례 조회</title>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./static/css/search.css">
-    <link rel="stylesheet" href="./static/css/header.css">
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <script defer src="{{ url_for('static', filename='js/case_search.js') }}"></script>
 </head>
 <body>
     <header class="header">
         <div  class="catches-logo"></div>
             <div class=header-wrapper>
                 <ul>
-                    <li><a href="home.html">홈</a></li>
-                    <li><a href="case_info.html">피해 사례 등록</a></li>
-                    <span class="li-color"><a href="case_search.html">피해 사례 조회</a></span>
-                    <li><a href="phishing_info.html">피싱 사이트 등록</a></li>
-                    <li><a href="phishing_search.html">피싱 사이트 조회</a></li>
+                    <li><a href="{{ url_for('main.index') }}">홈</a></li>
+                    <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
+                    <span class="li-color"><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></span>
+                    <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
+                    <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
                 </ul>
                 <div class=login-btn>
-                    <span  class="login-text">로그인</span>
+                    <span  class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
                 </div>
             </div>
     </header>
@@ -31,9 +31,9 @@
             <p>용의자 이름, 연락처, 계좌 정보를 입력해주세요</p>
             <form class="case-search-form" id="CaseSearchForm">
                 <div class="form-group">
-                    <input type="text" id="case" name="case" placeholder="용의자 이름" required>
+                    <input type="text" id="caseInfo" name="caseInfo" placeholder="용의자 이름, 연락처, 계좌 정보" required>
                 </div>
-                <button type="submit" class="case-submit-btn" id="CaseSubmitBtn" disabled>검색</button>
+                <button type="submit" class="submit-btn" id="CaseSubmitBtn" disabled>검색</button>
             </form>
         </section>
     </main>

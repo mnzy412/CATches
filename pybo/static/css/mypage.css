@@ -4,15 +4,6 @@ body {
     background-color: #FAF3FF;
 }
 
-.header {
-    background-color: #000000;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-
 .main-content {
     display: flex;
     flex-direction: column;
@@ -21,7 +12,6 @@ body {
 }
 
 .user-info {
-   
     padding: 20px;
     margin-bottom: 20px;
     width: 100%;
@@ -86,7 +76,6 @@ body {
 }
 
 .main-section {
-    
     padding: 20px;
     width: 100%;
     max-width: 800px;
@@ -119,4 +108,42 @@ body {
 .mypage-nav li:hover {
     background-color: #E8E4FF;
     transform: translateY(-2px);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    text-align: left;
+    border-radius: 10px;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

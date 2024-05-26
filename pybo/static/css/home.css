@@ -1,3 +1,5 @@
+
+
 body {
     font-family: 'Inter', sans-serif;
     margin: 0;
@@ -14,7 +16,7 @@ body {
     width:660px;
 	height:561px;
 	position:absolute;
-	left:723px;
+	left:1100px;
 	top:250px;
 	background-image:url(/static/img/catches-cat.png);
 	background-repeat:no-repeat;
@@ -96,4 +98,8 @@ body {
 		text-align:left;
 		font-size:18px;
 		letter-spacing:0;
+}
+
+a {
+	color: white;
 }
