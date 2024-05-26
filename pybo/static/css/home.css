@@ -26,7 +26,7 @@ body {
 .home-text {
     font-family: 'Inter', sans-serif;
     color:rgba(0, 0, 0, 1);
-	width:650px;
+	width:600px;
 	height:192px;
 	position:absolute;
 	left:114px;
@@ -38,7 +38,7 @@ body {
 }
 
 .white-section {
-    width:412px;
+    width:500px;
 	height:62px;
 	position:absolute;
 	left:114px;
@@ -48,7 +48,7 @@ body {
 .white-box {
     box-shadow:0px 1px 2px rgba(0, 0, 0, 0.05000000074505806);
 	background-color:rgba(255, 255, 255, 1);
-	width:428px;
+	width:600px;
 	height:62px;
 	position:absolute;
 	left:-8px;
@@ -61,7 +61,7 @@ body {
 
 .box-text {
 	color:rgba(0, 0, 0, 1);
-	width:343px;
+	width:600px;
 	height:30px;
 	position:absolute;
 	left:16px;
@@ -80,6 +80,7 @@ body {
 	position:absolute;
 	left:563px;
 	top:672px;
+	margin-left: 100px;
 	border-top-left-radius:8px;
 	border-top-right-radius:8px;
 	border-bottom-left-radius:8px;

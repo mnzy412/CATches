@@ -12,7 +12,7 @@
 <body>
     <!-- <header> 태그 안에 내용만 각 html에 넣어줘야 헤더(네비게이션바)가 생김-->
     <header class="header">
-        <div  class="catches-logo"></div>
+        <div class="catches-logo" id="logo"></div>
             <div class=header-wrapper>
                 <ul>
                     <!--현재 페이지 위치 색 바꾸려면 <li></li>지우고 <span class="li-color"></span>으로 교체-->
@@ -22,10 +22,19 @@
                     <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
                     <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
                 </ul>
-                <div class=login-btn>
-                    <span  class="login-text"><a href="user_login.html">로그인</a></span>
+                <div class="login-btn">
+                    {% if 'user_id' in session %}
+                        <span class="login-text"><a href="{{ url_for('main.mypage') }}">마이페이지</a></span>
+                    {% else %}
+                        <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
+                    {% endif %}
                 </div>
             </div>
     </header>
+    <script>
+        document.getElementById('logo').addEventListener('click', function() {
+            window.location.href = "{{ url_for('main.index') }}";
+        });
+    </script>
 </body>
 </html>

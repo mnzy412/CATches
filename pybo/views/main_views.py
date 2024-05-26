@@ -17,8 +17,13 @@ db = pymysql.connect(
 )
 cursor = db.cursor()
 
+# 닉네임 생성 로직 수정
+nick_prefixes = ["더보이즈", "투바투", "엔시티", "스키즈", "제베원", "투어스", "라이즈", "보넥도", "뉴진스", "에스파"]
+
 def generate_random_nick():
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+    prefix = random.choice(nick_prefixes)
+    suffix = ''.join(random.choices(string.digits, k=4))
+    return prefix + suffix
 
 @bp.route('/hello')
 def hello_pybo():
@@ -64,12 +69,12 @@ def login():
             
             if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
                 session['user_id'] = user[0]  # user[0]이 사용자 ID라고 가정
-                session['user_nick'] = user[5]  # user[4]가 사용자 닉네임이라고 가정
+                session['user_nick'] = user[5]  # user[5]가 사용자 닉네임이라고 가정
                 session['user_email'] = user[1]  # user[1]이 사용자 이메일이라고 가정
                 if remember:
                     session.permanent = True
                     bp.permanent_session_lifetime = timedelta(days=30)  # 30일 동안 세션 유지
-                flash('로그인 성공!', 'success')
+                #flash('로그인 성공!', 'success')
                 return redirect(url_for('main.mypage'))  # 로그인 성공 시 마이페이지로 리다이렉트
             else:
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
@@ -83,7 +88,7 @@ def logout():
     session.pop('user_id', None)
     session.pop('user_nick', None)
     session.pop('user_email', None)
-    flash('로그아웃되었습니다.', 'success')
+    #flash('로그아웃되었습니다.', 'success')
     return redirect(url_for('main.index'))
 
 
