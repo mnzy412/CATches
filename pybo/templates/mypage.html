@@ -30,11 +30,9 @@
                 {% endif %}
             </div>
         </div>
-
     </header>
 
     <main class="main-content">
-    
         <section class="user-info">
             <div class="user-header">
                 <h1>마이페이지</h1>
@@ -62,5 +60,30 @@
             </ul>
         </section>
     </main>
+
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>개인 정보</h2>
+            <p><strong>이름:</strong> <span id="user-name">USER_NAME</span></p>
+            <p><strong>전화번호:</strong> <span id="user-phone">USER_PHONE</span></p>
+        </div>
+    </div>
+
+    <div id="support-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>고객센터</h2>
+            <p>이것은 고객센터다.</p>
+        </div>
+    </div>
+
+    <div id="question-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>문의 안내</h2>
+            <p>이메일 보내라: mnzy412@gmail.com</p>
+        </div>
+    </div>
 </body>
 </html>

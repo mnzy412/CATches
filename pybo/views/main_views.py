@@ -64,7 +64,7 @@ def login():
             
             if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
                 session['user_id'] = user[0]  # user[0]이 사용자 ID라고 가정
-                session['user_nick'] = user[4]  # user[4]가 사용자 닉네임이라고 가정
+                session['user_nick'] = user[5]  # user[4]가 사용자 닉네임이라고 가정
                 session['user_email'] = user[1]  # user[1]이 사용자 이메일이라고 가정
                 if remember:
                     session.permanent = True
@@ -96,6 +96,7 @@ def mypage():
     user_email = session.get('user_email')
     return render_template('mypage.html', user_nick=user_nick, user_email=user_email)
 
+
 @bp.route('/mypage/case')
 def mypage_case():
     if 'user_id' not in session:
@@ -109,6 +110,25 @@ def mypage_phishing():
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
     return render_template('mypage_phishing.html')
+
+@bp.route('/user_info')
+def user_info():
+    if 'user_id' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect(url_for('main.login'))
+
+    user_id = session['user_id']
+    try:
+        sql = "SELECT user_name, user_phone FROM users WHERE user_key = %s"
+        cursor.execute(sql, (user_id,))
+        user = cursor.fetchone()
+        if user:
+            return {'user_name': user[0], 'user_phone': user[1]}, 200
+        else:
+            return {'error': 'User not found'}, 404
+    except pymysql.MySQLError as e:
+        return {'error': str(e)}, 500
+
 
 @bp.route('/search/c')
 def case_search():
