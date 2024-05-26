@@ -7,36 +7,54 @@
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_register.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <script defer src="{{ url_for('static', filename='js/user_register.js') }}"></script>
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     <header class="header">
-        <div  class="catches-logo"></div>
-            <div class=header-wrapper>
-                <ul>                    
-                    <li><a href="{{ url_for('main.index') }}">홈</a></li>
-                    <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
-                    <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
-                    <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
-                    <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
-                </ul>
-                <div class=login-btn>
-                    <span  class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
-                </div>
+        <div class="catches-logo"></div>
+        <div class="header-wrapper">
+            <ul>                    
+                <li><a href="{{ url_for('main.index') }}">홈</a></li>
+                <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
+                <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
+                <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
+                <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
+            </ul>
+            <div class="login-btn">
+                <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
             </div>
+        </div>
     </header>
     <main class="main-content">
         <section class="register-section">
             <h1>회원가입</h1>
             <p>회원가입을 위해 정보를 입력해주세요.</p>
-            <form class="register-form" id="registerForm">
+            <form class="register-form" id="registerForm" action="{{ url_for('main.register') }}" method="post">
+                <div class="form-group">
+                    <label for="name">이름</label>
+                    <input type="text" id="name" name="user_name" placeholder="홍길동" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">전화번호</label>
+                    <input type="tel" id="phone" name="user_phone" placeholder="000-0000-0000" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" required>
+                </div>
                 <div class="form-group">
                     <label for="email">이메일 주소</label>
                     <input type="email" id="email" name="email" placeholder="email@domain.com" required>
                 </div>
                 <div class="form-group">
                     <label for="password">비밀번호</label>
-                    <input type="password" id="password" name="password" placeholder="8자 이상 16자 이하의 숫자와 영문으로 구성" minlength ="8" maxlength="16" required>
+                    <input type="password" id="password" name="password" placeholder="8자 이상 16자 이하의 숫자와 영문으로 구성" minlength="8" maxlength="16" required>
                 </div>
                 <div class="form-group checkbox-group">
                     <label for="agree">
@@ -44,7 +62,7 @@
                         이용약관 개인정보 수집 및 정보 이용에 동의합니다.
                     </label>
                 </div>
-                <button type="submit" class="submit-btn" id="submitBtn" disabled>가입하기</button>
+                <button type="submit" class="submit-btn" id="submitBtn">가입하기</button>
             </form>
         </section>
     </main>
