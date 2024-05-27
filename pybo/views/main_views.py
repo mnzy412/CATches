@@ -5,6 +5,7 @@ import string
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta, datetime
 
+
 bp = Blueprint('main', __name__, url_prefix='/')
 
 # 데이터베이스 연결 설정
@@ -74,7 +75,7 @@ def login():
                     session.permanent = True
                     bp.permanent_session_lifetime = timedelta(days=30)  # 30일 동안 세션 유지
                 #flash('로그인 성공!', 'success')
-                return redirect(url_for('main.mypage'))  # 로그인 성공 시 마이페이지로 리다이렉트
+                return redirect(url_for('main.index'))  # 로그인 성공 시 마이페이지로 리다이렉트
             else:
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
         except pymysql.MySQLError as e:
@@ -142,7 +143,7 @@ def user_withdraw():
             cursor.execute(sql, (email,))
             user = cursor.fetchone()
             
-            if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
+            if user and check_password_hash(user[2], password):
                 return render_template('withdraw_confirm.html', email=email)
             else:
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
