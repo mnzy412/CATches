@@ -10,7 +10,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('info-view-link').addEventListener('click', function() {
-        document.getElementById('info-modal').style.display = 'block';
+        fetch('/user_info')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById('user-name').textContent = data.user_name;
+                    document.getElementById('user-phone').textContent = data.user_phone;
+                    document.getElementById('info-modal').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     });
 
     document.querySelectorAll('.close-btn').forEach(function(btn) {
