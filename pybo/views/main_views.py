@@ -126,7 +126,6 @@ def case_info():
         return redirect(url_for('main.login'))
     
     user_id = session['user_id']
-    flash(f'user_id: {user_id}')
     bank_name = request.args.get('bank_name')
     bank_account = request.args.get('bank_account')
     bank_nickname = request.args.get('bank_nickname')
@@ -180,6 +179,33 @@ def phishing_info():
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
+    
+    user_id = session['user_id']
+    phishing_url = request.args.get('site_url')
+    site_name = request.args.get('site_name')
+    site_type = request.args.get('case_type')
+    site_content = request.args.get('site_content')
+    phishing_count = 0
+    current_time = datetime.now()
+    phishing_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    try:
+        phishing_sql = "INSERT INTO phishing_info (user_key, phishing_count, phishing_date, phishing_url) VALUES (%s, %s, %s, %s)"
+        cursor.execute(phishing_sql, (user_id, phishing_count, phishing_date, phishing_url))
+        phishing_pk = cursor.lastrowid
+
+        phishing_detail_sql = "INSERT INTO phishing_info (phishing_key, site_type, site_name, site_content) VALUES (%s, %s, %s, %s)"
+        cursor.execute(phishing_detail_sql, (phishing_pk, site_type, site_name, site_content))
+
+        db.commit()
+        flash('피싱사이트 등록이 성공적으로 완료되었습니다.', 'success')
+        return redirect(url_for('main.index'))  # 변경: url_for('main.index')로 수정합니다.
+
+    except pymysql.MySQLError as e:
+        db.rollback()
+        flash(f"피해사례 등록 중 오류가 발생했습니다: {e}", 'danger')
+
+
     return render_template('phishing_info.html')
 
 @bp.route('/case_list')
