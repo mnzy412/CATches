@@ -22,20 +22,22 @@ def create_app():
             try:
                 cursor = db.cursor()
                 sql = """
-                UPDATE users
+                UPDATE users 
                 SET user_name = '탈퇴한 회원',
                     email = CONCAT('deleted_', user_key, '@example.com'),
                     password = '',
                     user_phone = NULL,
                     user_nick = NULL
-                WHERE status = 'deleted' AND TIMESTAMPDIFF(DAY, deleted_at, NOW()) >= 3;
+                WHERE status = 'deleted' AND TIMESTAMPDIFF(MINUTE, deleted_at, NOW()) >= 1;
                 """
-                cursor.execute(sql)
+                affected_rows = cursor.execute(sql)
                 db.commit()
+                print(f"{affected_rows} rows updated")
             except pymysql.MySQLError as e:
+                db.rollback()
                 print(f"Error finalizing withdrawals: {e}")
 
-    scheduler.add_job(id='finalize_withdrawals', func=finalize_withdrawals, trigger='interval', hours=1)
+    scheduler.add_job(id='finalize_withdrawals', func=finalize_withdrawals, trigger='interval', minutes=1)
     scheduler.start()
 
     from .views import main_views
