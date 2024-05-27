@@ -3,8 +3,7 @@ import pymysql
 import random
 import string
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import timedelta
-from datetime import datetime
+from datetime import timedelta, datetime
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
@@ -18,8 +17,13 @@ db = pymysql.connect(
 )
 cursor = db.cursor()
 
+# 닉네임 생성 로직 수정
+nick_prefixes = ["더보이즈", "투바투", "엔시티", "스키즈", "제베원", "투어스", "라이즈", "보넥도", "뉴진스", "에스파"]
+
 def generate_random_nick():
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+    prefix = random.choice(nick_prefixes)
+    suffix = ''.join(random.choices(string.digits, k=4))
+    return prefix + suffix
 
 @bp.route('/hello')
 def hello_pybo():
@@ -50,7 +54,6 @@ def register():
 
     return render_template('user_register.html')
 
-
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -65,13 +68,13 @@ def login():
             
             if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
                 session['user_id'] = user[0]  # user[0]이 사용자 ID라고 가정
-                session['user_nick'] = user[4]  # user[4]가 사용자 닉네임이라고 가정
+                session['user_nick'] = user[5]  # user[5]가 사용자 닉네임이라고 가정
                 session['user_email'] = user[1]  # user[1]이 사용자 이메일이라고 가정
                 if remember:
                     session.permanent = True
                     bp.permanent_session_lifetime = timedelta(days=30)  # 30일 동안 세션 유지
-                flash('로그인 성공!', 'success')
-                return redirect(url_for('main.mypage'))  # 로그인 성공 시 마이페이지로 리다이렉트
+                #flash('로그인 성공!', 'success')
+                return redirect(url_for('main.index'))  # 로그인 성공 시 마이페이지로 리다이렉트
             else:
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
         except pymysql.MySQLError as e:
@@ -84,9 +87,8 @@ def logout():
     session.pop('user_id', None)
     session.pop('user_nick', None)
     session.pop('user_email', None)
-    flash('로그아웃되었습니다.', 'success')
+    #flash('로그아웃되었습니다.', 'success')
     return redirect(url_for('main.index'))
-
 
 @bp.route('/mypage')
 def mypage():
@@ -110,6 +112,66 @@ def mypage_phishing():
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
     return render_template('mypage_phishing.html')
+
+@bp.route('/user_info')
+def user_info():
+    if 'user_id' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect(url_for('main.login'))
+
+    user_id = session['user_id']
+    try:
+        sql = "SELECT user_name, user_phone FROM users WHERE user_key = %s"
+        cursor.execute(sql, (user_id,))
+        user = cursor.fetchone()
+        if user:
+            return {'user_name': user[0], 'user_phone': user[1]}, 200
+        else:
+            return {'error': 'User not found'}, 404
+    except pymysql.MySQLError as e:
+        return {'error': str(e)}, 500
+
+@bp.route('/withdraw', methods=['GET', 'POST'])
+def user_withdraw():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        try:
+            sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
+            cursor.execute(sql, (email,))
+            user = cursor.fetchone()
+            
+            if user and check_password_hash(user[2], password):
+                return render_template('withdraw_confirm.html', email=email)
+            else:
+                flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
+        except pymysql.MySQLError as e:
+            flash(f"탈퇴 처리 중 오류가 발생했습니다: {e}", 'danger')
+    
+    return render_template('user_withdraw.html')
+
+@bp.route('/withdraw_confirm', methods=['POST'])
+def withdraw_confirm():
+    if 'user_id' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect(url_for('main.login'))
+    
+    if 'agree' in request.form:
+        user_id = session['user_id']
+        try:
+            sql = "UPDATE users SET status = 'deleted', deleted_at = %s WHERE user_key = %s"
+            cursor.execute(sql, (datetime.now(), user_id))
+            db.commit()
+            flash('회원 탈퇴가 성공적으로 처리되었습니다. 3일 내에 로그인하면 계정이 활성화됩니다.', 'success')
+            return redirect(url_for('main.logout'))
+        except pymysql.MySQLError as e:
+            db.rollback()
+            flash(f"탈퇴 처리 중 오류가 발생했습니다: {e}", 'danger')
+    else:
+        flash('탈퇴를 완료하려면 동의해주셔야 합니다.', 'danger')
+
+    return redirect(url_for('main.user_withdraw'))
 
 @bp.route('/search/c')
 def case_search():

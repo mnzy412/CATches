@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>홈</title>
+    <title>회원 탈퇴 확인</title>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/withdraw_confirm.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
 </head>
 <body>
     <header class="header">
         <div class="catches-logo" id="logo"></div>
         <div class="header-wrapper">
-            <ul>
-                <span class="li-color"><a href="{{ url_for('main.index') }}">홈</a></span>
+            <ul>                    
+                <li><a href="{{ url_for('main.index') }}">홈</a></li>
                 <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
                 <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
                 <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
@@ -23,31 +23,34 @@
                 {% if 'user_id' in session %}
                     <span class="login-text"><a href="{{ url_for('main.mypage') }}">마이페이지</a></span>
                 {% else %}
-                    <span class="login-text"><a href="{{ url_for('main.login') }}"></a>로그인</a></span>
+                    <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
                 {% endif %}
             </div>
         </div>
     </header>
-    <main class="home-main">
-        <div class="catches-cat"></div>
-        <span class="home-text">캣치스와 함께라면 언제나 안전하게</span>
-        <section class="white-section">
-            <div class="white-box">
-                <span class="box-text">회원이 되어 안전한 인터넷 문화를 만드는데 동참해주세요</span>
-            </div>
+    <main class="main-content">
+        <section class="confirm-section">
+            <h1>회원 탈퇴 확인</h1>
+            <p>회원 탈퇴 안내사항을 읽고 동의해주시면 탈퇴가 완료됩니다.</p>
+            <ul>
+                <li>탈퇴해도 글 삭제 안됨</li>
+                <li>탈퇴하면 영원히 글 삭제 안됨</li>
+                <li>3일 이내 로그인 시 활성화 가능</li>
+                <li>비활성화 이후 같은 이메일로 다시 가입 가능</li>
+            </ul>
+            <form class="confirm-form" id="confirmForm" action="{{ url_for('main.withdraw_confirm') }}" method="post">
+                <div class="form-group">
+                    <input type="checkbox" id="agree" name="agree" required>
+                    <label for="agree">안내사항을 읽었으며 동의합니다.</label>
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">탈퇴하기</button>
+            </form>
         </section>
-        {% if 'user_id' not in session %}
-        <div class="purple-btn">
-            <span class="btn-text"><a href="{{ url_for('main.register') }}">회원가입</a></span>
-        </div>
-        {% endif %}
     </main>
-
     <script>
         document.getElementById('logo').addEventListener('click', function() {
             window.location.href = "{{ url_for('main.index') }}";
         });
     </script>
-
 </body>
 </html>
