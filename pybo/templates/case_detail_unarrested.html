@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>피해 사례 상세 조회 - 수사 중</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/case_detail_unarrested.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="catches-logo" id="logo"></div>
+        <div class=header-wrapper>
+            <ul>
+                <li><a href="{{ url_for('main.index') }}">홈</a></li>
+                <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
+                <span class="li-color"><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></span>
+                <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
+                <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
+            </ul>
+            <div class="login-btn">
+                {% if 'user_id' in session %}
+                    <span class="login-text"><a href="{{ url_for('main.mypage') }}">마이페이지</a></span>
+                {% else %}
+                    <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <main class="main-content">
+        <section>
+            <form>
+                <div class="header-container">
+                    <h2>사례 등록일: 2024년 5월 1일</h2>
+                    <button type="submit">미검거</button>
+                </div>
+                <div class="form-group">
+                    <label for="bank-name" class="fixed-label">은행명</label>
+                    <input type="text" id="bank-name" name="bank-name" placeholder="xx은행" required aria-label="은행명" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="bank_account" class="fixed-label">계좌번호</label>
+                    <input type="text" id="bank_account" name="bank_account" placeholder="0000000000000000" required aria-label="계좌번호" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="bank_nickname" class="fixed-label">명의자 성명</label>
+                    <input type="text" id="bank_nickname" name="bank_nickname" placeholder="김철수" required aria-label="명의자 성명" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="suspect_phone" class="fixed-label">연락처</label>
+                    <input type="tel" id="suspect_phone" name="suspect_phone" placeholder="01012345678" required aria-label="연락처" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="case_date" class="fixed-label">입금일</label>
+                    <input type="date" id="case_date" name="case_date" required aria-label="입금일" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="case_price" class="fixed-label">입금 금액</label>
+                    <input type="number" id="case_price" name="case_price" placeholder="1000000" required aria-label="입금 금액" readonly>
+                </div>
+                <div class="form-group full-width">
+                    <label>피해 유형</label>
+                    <div class="radio-group">
+                        <label><input type="radio" id="online" name="case_type" value="online" disabled checked > 온라인</label>
+                        <label><input type="radio" id="offline" name="case_type" disabled value="offline"> 오프라인</label>
+                        <label><input type="radio" id="etc" name="case_type" disabled value="etc"> 기타</label>
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label>피해 발생 플랫폼 종류</label>
+                    <div class="radio-group">
+                        <label><input type="radio" id="sns" name="platform_type" disabled value="sns" checked> SNS</label>
+                        <label><input type="radio" id="market" name="platform_type" disabled value="market"> 중고거래</label>
+                        <label><input type="radio" id="webstore" name="platform_type" disabled value="webstore"> 웹스토어</label>
+                        <label><input type="radio" id="etc_platform" name="platform_type" disabled value="etc_platform"> 기타</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="case_item" class="fixed-label">거래 물품명</label>
+                    <input type="text" id="case_item" name="case_item" placeholder="티켓" required aria-label="거래 물품명" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="suspect_key" class="fixed-label">용의자 사용 ID</label>
+                    <input type="text" id="suspect_key" name="suspect_key" placeholder="@imfraud" required aria-label="용의자 사용 ID" readonly>
+                </div>
+                <div class="form-group full-width">
+                    <label for="phishing_url" class="fixed-label">사기 게시글 URL</label>
+                    <input type="url" id="phishing_url" name="phishing_url" placeholder="https://www.fraud.com/" required aria-label="사기 게시글 URL" readonly>
+                </div>
+                <div class="form-group full-width">
+                    <label for="case_description" class="fixed-label">사건 개요</label>
+                    <textarea id="case_description" name="case_description" rows="4" placeholder="어제 사기 당했어요... ㅜㅜ" required aria-label="사건 개요" readonly></textarea>
+                </div>
+            </form>
+        </section>
+    </main>
+    <script>
+        document.getElementById('logo').addEventListener('click', function() {
+            window.location.href = "{{ url_for('main.index') }}";
+        });
+    </script>
+</body>
+</html>
