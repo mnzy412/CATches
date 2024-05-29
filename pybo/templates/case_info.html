@@ -7,19 +7,52 @@
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/case_info.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <script src="{{ url_for('static', filename='js/case_info.js') }}" defer></script>
+    <style>
+        .error-message {
+            display: none;
+            color: red;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+
+        .input-container input,
+        .input-container textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .input-container .error-tooltip {
+            position: absolute;
+            top: 50%;
+            left: 105%;
+            transform: translateY(-50%);
+            background-color: #D4A5E6;
+            color: #fff;
+            border: 1px solid #C07AD5;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            z-index: 10;
+            display: none;
+            white-space: nowrap;
+            font-size: 0.875rem;
+        }
+
+        .input-container input.invalid,
+        .input-container textarea.invalid {
+            border-color: #C07AD5;
+        }
+    </style>
 </head>
 <body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul class="flashes">
-            {% for category, message in messages %}
-                <li class="{{ category }}">{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
     <header class="header">
-        <div class="catches-logo" id="logo"></div>
+        <div class="catches-logo"></div>
         <div class="header-wrapper">
             <ul>
                 <li><a href="{{ url_for('main.index') }}">홈</a></li>
@@ -28,44 +61,44 @@
                 <li><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></li>
                 <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
             </ul>
-            <div class="login-btn">
-                {% if 'user_id' in session %}
-                    <span class="login-text"><a href="{{ url_for('main.mypage') }}">마이페이지</a></span>
-                {% else %}
-                    <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
-                {% endif %}
+            <div class=login-btn>
+                <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
             </div>
         </div>
     </header>
-    <main class="main-content">
+    <main class="main-content full-width">
         <section>
-            <form>
-                <div class="header-container">
-                    <h1>피해 사례 등록</h1>
+            <h1>피해 사례 등록</h1>
+            <form class="full-width">
+                <div class="form-group input-container">
+                    <label for="bank-name" class="fixed-label">은행명</label>
+                    <input type="text" id="bank-name" name="bank-name" placeholder="xx은행" required aria-label="은행명">
+                    <div class="error-tooltip" id="error-bank-name"></div>
                 </div>
-                <div class="form-group">
-                    <label for="bank_name" class="fixed-label">은행명</label>
-                    <input type="text" id="bank_name" name="bank_name" placeholder="xx은행" required>
-                </div>
-                <div class="form-group">
+                <div class="form-group input-container">
                     <label for="bank_account" class="fixed-label">계좌번호</label>
-                    <input type="text" id="bank_account" name="bank_account" placeholder="0000000000000000" required>
+                    <input type="text" id="bank_account" name="bank_account" placeholder="0000000000000000" required aria-label="계좌번호">
+                    <div class="error-tooltip" id="error-bank-account"></div>
                 </div>
-                <div class="form-group">
+                <div class="form-group input-container">
                     <label for="bank_nickname" class="fixed-label">명의자 성명</label>
-                    <input type="text" id="bank_nickname" name="bank_nickname" placeholder="김철수" required>
+                    <input type="text" id="bank_nickname" name="bank_nickname" placeholder="김철수" required aria-label="명의자 성명">
+                    <div class="error-tooltip" id="error-bank-nickname"></div>
                 </div>
-                <div class="form-group">
+                <div class="form-group input-container">
                     <label for="suspect_phone" class="fixed-label">연락처</label>
-                    <input type="tel" id="suspect_phone" name="suspect_phone" placeholder="01012345678" required>
+                    <input type="tel" id="suspect_phone" name="suspect_phone" placeholder="01012345678" required aria-label="연락처">
+                    <div class="error-tooltip" id="error-suspect-phone"></div>
                 </div>
-                <div class="form-group">
+                <div class="form-group input-container">
                     <label for="case_date" class="fixed-label">입금일</label>
-                    <input type="date" id="case_date" name="case_date" required>
+                    <input type="date" id="case_date" name="case_date" required aria-label="입금일">
+                    <div class="error-tooltip" id="error-case-date"></div>
                 </div>
-                <div class="form-group">
+                <div class="form-group input-container">
                     <label for="case_price" class="fixed-label">입금 금액</label>
-                    <input type="number" id="case_price" name="case_price" placeholder="1000000" required>
+                    <input type="text" id="case_price" name="case_price" placeholder="1000000" required aria-label="입금 금액">
+                    <div class="error-tooltip" id="error-case-price"></div>
                 </div>
                 <div class="form-group full-width">
                     <label>피해 유형</label>
@@ -84,32 +117,29 @@
                         <label><input type="radio" id="etc_platform" name="platform_type" value="etc_platform"> 기타</label>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group input-container">
                     <label for="case_item" class="fixed-label">거래 물품명</label>
-                    <input type="text" id="case_item" name="case_item" placeholder="티켓" required>
+                    <input type="text" id="case_item" name="case_item" placeholder="티켓" required aria-label="거래 물품명">
+                    <div class="error-tooltip" id="error-case-item"></div>
                 </div>
-                <div class="form-group">
+                <div class="form-group input-container">
                     <label for="suspect_key" class="fixed-label">용의자 사용 ID</label>
-                    <input type="text" id="suspect_key" name="suspect_key" placeholder="@imfraud" required>
+                    <input type="text" id="suspect_key" name="suspect_key" placeholder="@imfraud" required aria-label="용의자 사용 ID">
+                    <div class="error-tooltip" id="error-suspect-key"></div>
                 </div>
-                <div class="form-group full-width">
-                    <label for="phishing_url" class="'fixed-label">사기 게시글 URL</label>
-                    <input type="url" id="phishing_url" name="phishing_url" placeholder="https://www.fraud.com/" required>
+                <div class="form-group input-container full-width">
+                    <label for="phishing_url" class="fixed-label">사기 게시글 URL</label>
+                    <input type="url" id="phishing_url" name="phishing_url" placeholder="https://www.fraud.com/" required aria-label="사기 게시글 URL">
+                    <div class="error-tooltip" id="error-phishing-url"></div>
                 </div>
-                <div class="form-group full-width">
+                <div class="form-group input-container full-width">
                     <label for="case_description" class="fixed-label">사건 개요</label>
-                    <textarea id="case_description" name="case_description" rows="4" placeholder="어제 사기 당했어요... ㅜㅜ" required></textarea>
+                    <textarea id="case_description" name="case_description" rows="4" placeholder="어제 사기 당했어요... ㅜㅜ" required aria-label="사건 개요"></textarea>
+                    <div class="error-tooltip" id="error-case-description"></div>
                 </div>
-                <button type="submit">사건 등록</button>
             </form>
+            <button type="submit" class="submit-btn" id="InfoSubmitBtn" disabled>사건 등록하기</button>
         </section>
     </main>
-
-    <script>
-        document.getElementById('logo').addEventListener('click', function() {
-            window.location.href = "{{ url_for('main.index') }}";
-        });
-    </script>
-
 </body>
 </html>

@@ -277,17 +277,13 @@ def case_list():
         table_name = 'suspects'
     return render_template('case_list.html')
 
-@bp.route('/case_detail')
-def case_detail():
-    return render_template('case_detail.html')
+@bp.route('/case_detail_unarrested')
+def case_detail_unarrested():
+    return render_template('case_detail_unarrested.html')
 
-@bp.route('/check_case_detail')
-def check_case_detail():
-    return render_template('check_case_detail.html')
-
-@bp.route('/solve_case_detail')
-def solve_case_detail():
-    return render_template('solve_case_detail.html')
+@bp.route('/case_detail_arrested')
+def case_detail_arrested():
+    return render_template('case_detail_arrested.html')
 
 @bp.route('/phishing_detail')
 def phishing_detail():
