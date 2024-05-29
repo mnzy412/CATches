@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 import random
 import string
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 import pymysql
 
 bp = Blueprint('main', __name__, url_prefix='/')
@@ -76,7 +76,7 @@ def login():
                 else:
                     session.permanent = True
                     current_app.permanent_session_lifetime = timedelta(hours=1)  # 1시간 동안 세션 유지
-                flash('로그인 성공!', 'success')
+                #flash('로그인 성공!', 'success')
                 return redirect(url_for('main.index'))  # 로그인 성공 시 마이페이지로 리다이렉트
             else:
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
@@ -138,6 +138,10 @@ def user_info():
 
 @bp.route('/withdraw', methods=['GET', 'POST'])
 def user_withdraw():
+    if 'user_id' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect(url_for('main.login'))
+      
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -149,10 +153,10 @@ def user_withdraw():
             cursor.execute(sql, (email,))
             user = cursor.fetchone()
             
-            if user and check_password_hash(user[2], password):
+            if user and user[1] == session.get('user_email') and check_password_hash(user[2], password):
                 return render_template('withdraw_confirm.html', email=email)
             else:
-                flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
+                flash('현재 로그인된 계정의 이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
         except pymysql.MySQLError as e:
             flash(f"탈퇴 처리 중 오류가 발생했습니다: {e}", 'danger')
     
@@ -166,9 +170,9 @@ def withdraw_confirm():
     
     if 'agree' in request.form:
         user_id = session['user_id']
+        db = get_db()
+        cursor = db.cursor()
         try:
-            db = get_db()
-            cursor = db.cursor()
             sql = "UPDATE users SET status = 'deleted', deleted_at = %s WHERE user_key = %s"
             cursor.execute(sql, (datetime.now(), user_id))
             db.commit()
