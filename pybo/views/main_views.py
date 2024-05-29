@@ -1,21 +1,17 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-import pymysql
+# main_views.py
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, g, current_app
 import random
 import string
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import timedelta, datetime
+from datetime import datetime
+import pymysql
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
-# 데이터베이스 연결 설정
-db = pymysql.connect(
-    host='localhost', 
-    user='root', 
-    password='root', 
-    db='catchesdb', 
-    charset='utf8'
-)
-cursor = db.cursor()
+def get_db():
+    if 'db' not in g:
+        g.db = current_app.get_db()
+    return g.db
 
 # 닉네임 생성 로직 수정
 nick_prefixes = ["더보이즈", "투바투", "엔시티", "스키즈", "제베원", "투어스", "라이즈", "보넥도", "뉴진스", "에스파"]
@@ -42,6 +38,8 @@ def register():
         password = generate_password_hash(request.form['password'])  # 비밀번호 해시화
         user_nick = generate_random_nick()
 
+        db = get_db()
+        cursor = db.cursor()
         try:
             sql = "INSERT INTO users (email, password, user_name, status, user_nick, user_phone) VALUES (%s, %s, %s, 'active', %s, %s)"
             cursor.execute(sql, (email, password, user_name, user_nick, user_phone))
@@ -61,19 +59,24 @@ def login():
         password = request.form['password']
         remember = request.form.get('remember')
         
+        db = get_db()
+        cursor = db.cursor()
         try:
             sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
             cursor.execute(sql, (email,))
             user = cursor.fetchone()
             
-            if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
-                session['user_id'] = user[0]  # user[0]이 사용자 ID라고 가정
-                session['user_nick'] = user[5]  # user[5]가 사용자 닉네임이라고 가정
-                session['user_email'] = user[1]  # user[1]이 사용자 이메일이라고 가정
+            if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호
+                session['user_id'] = user[0]  # user[0]이 사용자 ID
+                session['user_nick'] = user[5]  # user[5]가 사용자 닉네임
+                session['user_email'] = user[1]  # user[1]이 사용자 이메일
                 if remember:
                     session.permanent = True
-                    bp.permanent_session_lifetime = timedelta(days=30)  # 30일 동안 세션 유지
-                #flash('로그인 성공!', 'success')
+                    current_app.permanent_session_lifetime = timedelta(hours=3)  # 3시간 동안 세션 유지
+                else:
+                    session.permanent = True
+                    current_app.permanent_session_lifetime = timedelta(hours=1)  # 1시간 동안 세션 유지
+                flash('로그인 성공!', 'success')
                 return redirect(url_for('main.index'))  # 로그인 성공 시 마이페이지로 리다이렉트
             else:
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
@@ -87,7 +90,7 @@ def logout():
     session.pop('user_id', None)
     session.pop('user_nick', None)
     session.pop('user_email', None)
-    #flash('로그아웃되었습니다.', 'success')
+    flash('로그아웃되었습니다.', 'success')
     return redirect(url_for('main.index'))
 
 @bp.route('/mypage')
@@ -120,6 +123,8 @@ def user_info():
         return redirect(url_for('main.login'))
 
     user_id = session['user_id']
+    db = get_db()
+    cursor = db.cursor()
     try:
         sql = "SELECT user_name, user_phone FROM users WHERE user_key = %s"
         cursor.execute(sql, (user_id,))
@@ -137,6 +142,8 @@ def user_withdraw():
         email = request.form['email']
         password = request.form['password']
         
+        db = get_db()
+        cursor = db.cursor()
         try:
             sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
             cursor.execute(sql, (email,))
@@ -160,6 +167,8 @@ def withdraw_confirm():
     if 'agree' in request.form:
         user_id = session['user_id']
         try:
+            db = get_db()
+            cursor = db.cursor()
             sql = "UPDATE users SET status = 'deleted', deleted_at = %s WHERE user_key = %s"
             cursor.execute(sql, (datetime.now(), user_id))
             db.commit()
@@ -203,6 +212,8 @@ def case_info():
     current_time = datetime.now()
     case_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
+    db = get_db()
+    cursor = db.cursor()
     try:
         suspect_sql = "INSERT INTO suspects (suspect_phone, suspect_status) VALUES (%s,'unarrested')"
         cursor.execute(suspect_sql, (suspect_phone))
@@ -251,6 +262,8 @@ def phishing_info():
     current_time = datetime.now()
     phishing_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
+    db = get_db()
+    cursor = db.cursor()
     try:
         phishing_sql = "INSERT INTO phishing_info (user_key, phishing_count, phishing_date, phishing_url) VALUES (%s, %s, %s, %s)"
         cursor.execute(phishing_sql, (user_id, phishing_count, phishing_date, phishing_url))
