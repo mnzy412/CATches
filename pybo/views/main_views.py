@@ -386,34 +386,43 @@ def case_detail(case_key):
         flash(f"상세 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.case_list'))
 
-
-@bp.route('/phishing_detail')
+@bp.route('/phishing_detail', methods=['GET'])
 def phishing_detail():
-    phishing_info = request.form.get('phishingInfo').strip()
-    
-    # 데이터베이스에서 피싱 사이트 정보를 조회합니다.
+    phishing_info = request.args.get('phishingInfo').strip()
+
     try:
+        # 피싱 사이트 정보 조회
         sql = """
-            SELECT site_url, site_name, site_type, site_content, phishing_date 
-            FROM phishing_info
-            WHERE site_url = %s OR site_name = %s
+            SELECT pi.phishing_key, pi.phishing_url, pd.site_name, pd.site_type, pd.site_content, pi.phishing_date, pi.phishing_count
+            FROM phishing_info pi
+            JOIN phishing_detail pd ON pi.phishing_key = pd.phishing_key
+            WHERE pi.phishing_url = %s OR pd.site_name = %s
         """
         cursor.execute(sql, (phishing_info, phishing_info))
         phishing_detail = cursor.fetchone()
-        
+
         if phishing_detail:
             phishing_data = {
-                'site_url': phishing_detail[0],
-                'site_name': phishing_detail[1],
-                'site_type': phishing_detail[2],
-                'site_content': phishing_detail[3],
-                'phishing_date': phishing_detail[4]
+                'phishing_key': phishing_detail[0],
+                'site_url': phishing_detail[1],
+                'site_name': phishing_detail[2],
+                'site_type': phishing_detail[3],
+                'site_content': phishing_detail[4],
+                'phishing_date': phishing_detail[5],
+                'phishing_count': phishing_detail[6]
             }
+
+            # 조회 수 증가
+            update_sql = "UPDATE phishing_info SET phishing_count = phishing_count + 1 WHERE phishing_key = %s"
+            cursor.execute(update_sql, (phishing_data['phishing_key'],))
+            db.commit()
+
             return render_template('phishing_detail.html', phishing_data=phishing_data)
         else:
             flash('해당 피싱 사이트 정보를 찾을 수 없습니다.', 'danger')
             return redirect(url_for('main.phishing_search'))
-
+    
     except pymysql.MySQLError as e:
+        db.rollback()
         flash(f"피싱 사이트 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.phishing_search'))
