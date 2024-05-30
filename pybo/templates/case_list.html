@@ -33,12 +33,12 @@
     <main class="main-content">
         <section class="search-section">
           
-            <form class="list-search-form" id="ListSearchForm">
+            <form class="list-search-form" id="ListSearchForm" method="GET" action="{{ url_for('main.case_list') }}">
                 <div class="form-group">
-                    <input type="text" id="caseList" name="caseList" placeholder="용의자 이름, 연락처, 계좌 정보" required>
+                    <input type="text" id="caseList" name="caseInfo" placeholder="용의자 이름, 연락처, 계좌 정보" value="{{ caseInfo }}" required>
                 </div>
-                <button type="submit" class="submit-list" id="submitList" disabled>검색</button>  
-            </form>
+                <button type="submit" class="submit-list" id="submitList">검색</button>
+            </form>            
             
             <table>
                 <thead>
@@ -47,40 +47,27 @@
                         <th>명의자 성명</th>
                         <th>피해 유형</th>
                         <th>등록일</th>
+                        <th>검거 여부</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                    </tr>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                    </tr>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                    </tr>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                    </tr>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                    </tr>
+                    {% if cases %}
+                        {% for case in cases %}
+                        <tr>
+                            <td><a href="{{ url_for('main.case_detail', case_key=case.case_key) }}">{{ case.bank_account }}</a></td>
+                            <td>{{ case.bank_nickname }}</td>
+                            <td>{{ case.case_type }}</td>
+                            <td>{{ case.case_date }}</td>
+                            <td>{{ case.suspect_status }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">검색 결과가 없습니다.</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
+                
             </table> 
             
             

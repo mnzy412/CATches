@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>피해 사례 상세 조회 - 해결</title>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/solve_case_detail.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/case_detail_arrested.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
 </head>
 <body>
@@ -33,7 +33,7 @@
             <form>
                 <div class="header-container">
                     <h2>사례 등록일: 2024년 5월 1일</h2>
-                    <button type="submit">해결</button>
+                    <button type="submit">검거</button>
                 </div>
                 <div class="form-group">
                     <label for="police-name" class="fixed-label">담당 경찰</label>
@@ -44,20 +44,36 @@
                     <input type="text" id="police-location" name="police-location" placeholder="서울" required aria-label="관할지역" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="bank-name" class="fixed-label">은행명</label>
-                    <input type="text" id="bank-name" name="bank-name" placeholder="xx은행" required aria-label="은행명" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="bank_account" class="fixed-label">계좌번호</label>
-                    <input type="text" id="bank_account" name="bank_account" placeholder="0000000000000000" required aria-label="계좌번호" readonly>
-                </div>
-                <div class="form-group">
                     <label for="bank_nickname" class="fixed-label">명의자 성명</label>
                     <input type="text" id="bank_nickname" name="bank_nickname" placeholder="김철수" required aria-label="명의자 성명" readonly>
                 </div>
                 <div class="form-group">
                     <label for="suspect_phone" class="fixed-label">연락처</label>
                     <input type="tel" id="suspect_phone" name="suspect_phone" placeholder="01012345678" required aria-label="연락처" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="gender" class="fixed-label">성별</label>
+                    <input type="text" id="gender" name="gender" placeholder="남" required aria-label="성별" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="age" class="fixed-label">나이</label>
+                    <input type="text" id="age" name="age" placeholder="30" required aria-label="나이" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="nationality" class="fixed-label">국적</label>
+                    <input type="text" id="nationality" name="nationality" placeholder="한국" required aria-label="국적" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="credit_rating" class="fixed-label">신용등급</label>
+                    <input type="text" id="credit_rating" name="credit_rating" placeholder="1" required aria-label="신용등급" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="bank-name" class="fixed-label">은행명</label>
+                    <input type="text" id="bank-name" name="bank-name" placeholder="xx은행" required aria-label="은행명" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="bank_account" class="fixed-label">계좌번호</label>
+                    <input type="text" id="bank_account" name="bank_account" placeholder="0000000000000000" required aria-label="계좌번호" readonly>
                 </div>
                 <div class="form-group">
                     <label for="case_date" class="fixed-label">입금일</label>

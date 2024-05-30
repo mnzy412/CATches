@@ -29,11 +29,20 @@
                 </div>
             </div>
     </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
     <main class="main-content">
         <section class="search-section">
             <h1>피해 사례 조회</h1>
             <p>용의자 이름, 연락처, 계좌 정보를 입력해주세요</p>
-            <form class="case-search-form" id="CaseSearchForm">
+            <form class="case-search-form" id="CaseSearchForm" action="{{url_for('main.case_list')}}" method="GET">
                 <div class="form-group">
                     <input type="text" id="caseInfo" name="caseInfo" placeholder="용의자 이름, 연락처, 계좌 정보" required>
                 </div>

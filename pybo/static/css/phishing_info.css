@@ -45,6 +45,13 @@ button {
     margin-top: 150px; /* 헤더 높이만큼의 여백 추가 */
 }
 
+section h1 {
+    font-size: 36px;
+    margin-bottom: 30px; /* 간격을 줄이기 위해 추가 */
+    text-align: center;
+}
+
+
 .date {
     font-weight: 600;
     color: rgba(120, 19, 192, 1);
@@ -56,18 +63,6 @@ form {
     grid-template-columns: 1fr;
     gap: 1.5rem; /* 간격을 1.5배로 늘림 */
     background-color: transparent;
-}
-
-.header-container {
-    grid-column: span 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-form h1 {
-    font-size: 36px;
-    margin-bottom: 0; /* 간격을 줄이기 위해 추가 */
 }
 
 form h2 {
@@ -214,3 +209,45 @@ label[for="site_content"] {
 #site_content {
     grid-column: span 1;
 }
+
+.submit-btn {
+    background-color: #7813C0;
+    color: white;
+    padding: 20px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%; /* 최대 너비 설정 */
+    margin-top: 30px; /* 여백 추가 */
+    display: block;
+    margin-left: auto; /* 오른쪽으로 정렬 */
+    margin-right: auto; /* 가운데 정렬 */
+    display: block;
+}
+
+.submit-btn:disabled {
+    background-color: #CCCCCC; /* 비활성화 시 회색으로 보이도록 설정 */
+    cursor: not-allowed; 
+}
+
+.submit-btn:hover {
+    background-color: #60109A;
+}
+
+/* 추가된 스타일 */
+.error-message {
+    background-color: #7813C0;  /* 보라색 배경 */
+    color: white;  /* 흰색 글자 */
+    font-size: 0.8em;
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 5px;
+    white-space: nowrap;
+}
+
+.invalid {
+    border-color: #ff0000;
+}
+
