@@ -31,30 +31,25 @@
     <main class="main-content">
         <section>
             <form>
-                <h1>피싱 사이트 조회</h1>
+                <h1>피싱 사이트 상세 조회</h1>
                 <div class="header-container">
-                    <p class="date">사례 등록일: 2024년 5월 1일</p>
+                    <p class="date">사례 등록일: {{ phishing_data.phishing_date }}</p>
                 </div>
                 <div class="form-group full-width">
                     <label for="site_url" class="fixed-label">피싱 사이트 URL</label>
-                    <input type="text" id="site_url" name="site_url" placeholder="https://www.catcheese.com/" required aria-label="피싱 사이트 URL" readonly>
+                    <input type="text" id="site_url" name="site_url" value="{{ phishing_data.site_url }}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="site_name" class="fixed-label">피싱 사이트 이름</label>
-                    <input type="text" id="site_name" name="site_name" placeholder="CATcheese" required aria-label="피싱 사이트 이름" readonly>
+                    <input type="text" id="site_name" name="site_name" value="{{ phishing_data.site_name }}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label><strong>피해 유형</strong></label>
-                    <div class="radio-group">
-                        <label><input type="radio" id="personal_info_leak" name="case_type" value="personal_info_leak" disabled checked> 개인정보 유출</label>
-                        <label><input type="radio" id="malicious_code" name="case_type" disabled value="malicious_code"> 악성코드 감염</label>
-                        <label><input type="radio" id="financial_damage" name="case_type" disabled value="financial_damage"> 금전적 피해</label>
-                        <label><input type="radio" id="other" name="case_type" disabled value="other"> 기타</label>
-                    </div>
+                    <input type="text" id="site_type" name="site_type" value="{{ phishing_data.site_type }}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="site_content" class="fixed-label">사건 개요</label>
-                    <textarea id="site_content" name="site_content" rows="10" placeholder="catches인 줄 알았는데 catcheese예요!!" required aria-label="사건 개요" readonly></textarea>
+                    <textarea id="site_content" name="site_content" rows="10" readonly>{{ phishing_data.site_content }}</textarea>
                 </div>
             </form>
         </section>

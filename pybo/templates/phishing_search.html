@@ -34,12 +34,13 @@
         <section class="search-section">
             <h1>피싱 사이트 조회</h1>
             <p>피싱 사이트 URL, 피싱 사이트 이름을 입력해주세요</p>
-            <form class="phishing-search-form" id="PhishingSearchForm">
+            <form class="phishing-search-form" id="PhishingSearchForm" action="{{ url_for('main.phishing_detail') }}" method="post">
                 <div class="form-group">
                     <input type="text" id="phishingInfo" name="phishingInfo" placeholder="URL , 피싱 사이트 이름" required>
                 </div>
                 <button type="submit" class="submit-btn" id="PhishingSubmitBtn" disabled>검색</button>
             </form>
+            
         </section>
     </main>
     <script>
