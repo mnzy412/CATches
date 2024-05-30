@@ -54,7 +54,7 @@
                     {% if cases %}
                         {% for case in cases %}
                         <tr>
-                            <td>{{ case.bank_account }}</td>
+                            <td><a href="{{ url_for('main.case_detail', case_key=case.case_key) }}">{{ case.bank_account }}</a></td>
                             <td>{{ case.bank_nickname }}</td>
                             <td>{{ case.case_type }}</td>
                             <td>{{ case.case_date }}</td>
@@ -67,6 +67,7 @@
                         </tr>
                     {% endif %}
                 </tbody>
+                
             </table> 
             
             

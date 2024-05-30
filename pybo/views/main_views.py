@@ -281,7 +281,7 @@ def case_list():
         if case_info.isdigit() and len(case_info) == 11:
             # 11자리 숫자인 경우 suspects 테이블 조회
             sql = """
-                SELECT b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status
+                SELECT i.case_key, b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status
                 FROM case_info i
                 JOIN bank b ON i.bank_key = b.bank_key
                 JOIN case_detail d ON i.case_key = d.case_key
@@ -292,7 +292,7 @@ def case_list():
         else:
             # 다른 경우 bank 테이블 조회
             sql = """
-                SELECT b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status
+                SELECT i.case_key, b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status
                 FROM case_info i
                 JOIN bank b ON i.bank_key = b.bank_key
                 JOIN case_detail d ON i.case_key = d.case_key
@@ -306,11 +306,12 @@ def case_list():
         case_list = []
         for case in cases:
             case_dict = {
-                'bank_account': case[0],
-                'bank_nickname': case[1],
-                'case_type': case[2],
-                'case_date': case[3],
-                'suspect_status': case[4],
+                'case_key': case[0],
+                'bank_account': case[1],
+                'bank_nickname': case[2],
+                'case_type': case[3],
+                'case_date': case[4],
+                'suspect_status': case[5],
             }
             case_list.append(case_dict)
         
@@ -319,13 +320,61 @@ def case_list():
         flash(f"검색 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.case_search'))
 
-@bp.route('/case_detail_unarrested')
-def case_detail_unarrested():
-    return render_template('case_detail_unarrested.html')
 
-@bp.route('/case_detail_arrested')
-def case_detail_arrested():
-    return render_template('case_detail_arrested.html')
+@bp.route('/case_detail/<int:case_key>')
+def case_detail(case_key):
+    try:
+        sql = """
+            SELECT i.case_key, b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status, 
+                   s.suspect_phone, s.suspect_sex, s.suspect_age, s.suspect_credit, s.suspect_country, 
+                   p.platform_name, p.platform_url, d.case_item, d.case_price, d.bank_date, d.case_content,
+                   po.police_name, po.police_location
+            FROM case_info i
+            JOIN bank b ON i.bank_key = b.bank_key
+            JOIN case_detail d ON i.case_key = d.case_key
+            JOIN suspects s ON b.suspect_key = s.suspect_key
+            JOIN platform p ON i.platform_key = p.platform_key
+            LEFT JOIN polices po ON s.police_key = po.police_key
+            WHERE i.case_key = %s
+        """
+        cursor.execute(sql, (case_key,))
+        case = cursor.fetchone()
+
+        if not case:
+            flash("해당 사례를 찾을 수 없습니다.", 'danger')
+            return redirect(url_for('main.case_list'))
+
+        case_info = {
+            'case_key': case[0],
+            'bank_account': case[1],
+            'bank_nickname': case[2],
+            'case_type': case[3],
+            'case_date': case[4],
+            'suspect_status': case[5],
+            'suspect_phone': case[6],
+            'suspect_sex': case[7],
+            'suspect_age': case[8],
+            'suspect_credit': case[9],
+            'suspect_country': case[10],
+            'platform_name': case[11],
+            'platform_url': case[12],
+            'case_item': case[13],
+            'case_price': case[14],
+            'bank_date': case[15],
+            'case_content': case[16],
+            'police_name': case[17],
+            'police_location': case[18]
+        }
+
+        if case_info['suspect_status'] == 'arrested':
+            return render_template('case_detail_arrested.html', case=case_info)
+        else:
+            return render_template('case_detail_unarrested.html', case=case_info)
+
+    except pymysql.MySQLError as e:
+        flash(f"상세 조회 중 오류가 발생했습니다: {e}", 'danger')
+        return redirect(url_for('main.case_list'))
+
 
 @bp.route('/phishing_detail')
 def phishing_detail():
