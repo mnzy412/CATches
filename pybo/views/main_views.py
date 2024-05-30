@@ -277,6 +277,7 @@ def case_list():
     if not case_info:
         flash('검색어를 입력해주세요.', 'danger')
         return redirect(url_for('main.case_search'))
+
     try:
         if case_info.isdigit() and len(case_info) == 11:
             # 11자리 숫자인 경우 suspects 테이블 조회
@@ -319,6 +320,7 @@ def case_list():
     except pymysql.MySQLError as e:
         flash(f"검색 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.case_search'))
+
 
 
 @bp.route('/case_detail/<int:case_key>')

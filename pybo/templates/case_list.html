@@ -33,12 +33,12 @@
     <main class="main-content">
         <section class="search-section">
           
-            <form class="list-search-form" id="ListSearchForm">
+            <form class="list-search-form" id="ListSearchForm" method="GET" action="{{ url_for('main.case_list') }}">
                 <div class="form-group">
-                    <input type="text" id="caseList" name="caseList" placeholder="용의자 이름, 연락처, 계좌 정보" value="{{ caseInfo }}" required>
+                    <input type="text" id="caseList" name="caseInfo" placeholder="용의자 이름, 연락처, 계좌 정보" value="{{ caseInfo }}" required>
                 </div>
-                <button type="submit" class="submit-list" id="submitList" disabled>검색</button>  
-            </form>
+                <button type="submit" class="submit-list" id="submitList">검색</button>
+            </form>            
             
             <table>
                 <thead>
