@@ -35,7 +35,7 @@
           
             <form class="list-search-form" id="ListSearchForm">
                 <div class="form-group">
-                    <input type="text" id="caseList" name="caseList" placeholder="용의자 이름, 연락처, 계좌 정보" required>
+                    <input type="text" id="caseList" name="caseList" placeholder="용의자 이름, 연락처, 계좌 정보" value="{{ caseInfo }}" required>
                 </div>
                 <button type="submit" class="submit-list" id="submitList" disabled>검색</button>  
             </form>
@@ -51,41 +51,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                        <td>검거</td>
-                    </tr>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                        <td>검거</td>
-                    </tr>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                        <td>검거</td>
-                    </tr>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                        <td>미검거</td>
-                    </tr>
-                    <tr>
-                        <td>우리 2021111</td>
-                        <td>김ㅇㅇ</td>
-                        <td>온라인</td>
-                        <td>2024.05.21</td>
-                        <td>미검거</td>
-                    </tr>
+                    {% if cases %}
+                        {% for case in cases %}
+                        <tr>
+                            <td>{{ case.bank_account }}</td>
+                            <td>{{ case.bank_nickname }}</td>
+                            <td>{{ case.case_type }}</td>
+                            <td>{{ case.case_date }}</td>
+                            <td>{{ case.suspect_status }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">검색 결과가 없습니다.</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table> 
             

@@ -270,12 +270,54 @@ def phishing_info():
 
     return render_template('phishing_info.html')
 
-@bp.route('/case_list')
+@bp.route('/case_list', methods=['GET'])
 def case_list():
-    caseList = request.form['caseList']
-    if caseList == '계좌 정보':
-        table_name = 'suspects'
-    return render_template('case_list.html')
+    case_info = request.args.get('caseInfo', '')
+
+    if not case_info:
+        flash('검색어를 입력해주세요.', 'danger')
+        return redirect(url_for('main.case_search'))
+    try:
+        if case_info.isdigit() and len(case_info) == 11:
+            # 11자리 숫자인 경우 suspects 테이블 조회
+            sql = """
+                SELECT b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status
+                FROM case_info i
+                JOIN bank b ON i.bank_key = b.bank_key
+                JOIN case_detail d ON i.case_key = d.case_key
+                JOIN suspects s ON b.suspect_key = s.suspect_key
+                WHERE s.suspect_phone = %s
+            """
+            cursor.execute(sql, (case_info,))
+        else:
+            # 다른 경우 bank 테이블 조회
+            sql = """
+                SELECT b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status
+                FROM case_info i
+                JOIN bank b ON i.bank_key = b.bank_key
+                JOIN case_detail d ON i.case_key = d.case_key
+                JOIN suspects s ON b.suspect_key = s.suspect_key
+                WHERE b.bank_account = %s OR b.bank_nickname = %s
+            """
+            cursor.execute(sql, (case_info, case_info))
+        
+        cases = cursor.fetchall()
+        
+        case_list = []
+        for case in cases:
+            case_dict = {
+                'bank_account': case[0],
+                'bank_nickname': case[1],
+                'case_type': case[2],
+                'case_date': case[3],
+                'suspect_status': case[4],
+            }
+            case_list.append(case_dict)
+        
+        return render_template('case_list.html', cases=case_list, caseInfo=case_info)
+    except pymysql.MySQLError as e:
+        flash(f"검색 중 오류가 발생했습니다: {e}", 'danger')
+        return redirect(url_for('main.case_search'))
 
 @bp.route('/case_detail_unarrested')
 def case_detail_unarrested():
