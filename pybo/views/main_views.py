@@ -104,10 +104,41 @@ def mypage():
 
 @bp.route('/mypage/case')
 def mypage_case():
-    if 'user_id' not in session:
-        flash('로그인이 필요합니다.', 'danger')
-        return redirect(url_for('main.login'))
-    return render_template('mypage_case.html')
+    #if 'user_id' not in session:
+        #flash('로그인이 필요합니다.', 'danger')
+        #return redirect(url_for('main.login'))
+    #return render_template('mypage_case.html')
+    if 'user_id' in session:
+            user_id = session['user_id']
+            db = get_db()
+            cursor = db.cursor()
+            try:
+                sql = """
+                SELECT ci.case_key, ci.case_date, cd.case_type, s.suspect_status, b.bank_account, b.bank_nickname, ci.user_key 
+                FROM case_info ci 
+                JOIN case_detail cd ON ci.case_key = cd.case_key 
+                JOIN suspects s ON ci.case_key = s.case_key 
+                JOIN bank_info b ON ci.bank_key = b.bank_key 
+                WHERE ci.case_key = %s AND ci.user_key = %s
+                """
+                cursor.execute(sql, (case_key, user_id))
+                case = cursor.fetchone()
+            except pymysql.MySQLError as e:
+                flash(f"Database error: {str(e)}", "danger")
+                return redirect(url_for('mypage_case'))
+            cursor.close()
+
+            if not case:
+                flash("해당 사례를 찾을 수 없습니다.", "danger")
+                return redirect(url_for('mypage_case'))
+
+            if case['suspect_status'] == 'arrested':
+                return render_template('case_detail_arrested.html', case=case)
+            else:
+                return render_template('case_detail_unarrested.html', case=case)
+    else:
+            flash("로그인이 필요합니다.", "warning")
+            return redirect(url_for('login'))
 
 @bp.route('/mypage/phishing')
 def mypage_phishing():
