@@ -112,36 +112,38 @@ def mypage_case():
             user_id = session['user_id']
             db = get_db()
             cursor = db.cursor()
+            case_table = []
             try:
                 sql = """
-                SELECT ci.case_key, ci.case_date, cd.case_type, s.suspect_status, b.bank_account, b.bank_nickname, ci.user_key 
+                SELECT ci.case_key, b.bank_account, b.bank_nickname, cd.case_type, ci.case_date, s.suspect_status 
                 FROM case_info ci 
                 JOIN case_detail cd ON ci.case_key = cd.case_key 
                 JOIN suspects s ON ci.case_key = s.case_key 
                 JOIN bank_info b ON ci.bank_key = b.bank_key 
-                WHERE ci.case_key = %s AND ci.user_key = %s
+                WHERE ci.user_key = %s
                 """
-                cursor.execute(sql, (case_key, user_id))
-                case = cursor.fetchone()
+                cursor.execute(sql, (user_id,))
+                cases = cursor.fetchall()
+                
+                for case in cases:
+                    case_dict = {
+                        'case_key': case['case_key'],
+                        'bank_account': case['bank_account'],
+                        'bank_nickname': case['bank_nickname'],
+                        'case_type': case['case_type'],
+                        'case_date': case['case_date'],
+                        'suspect_status': case['suspect_status'],
+                    }
+                    case_table.append(case_dict)
             except pymysql.MySQLError as e:
                 flash(f"Database error: {str(e)}", "danger")
-                return redirect(url_for('mypage_case'))
-            cursor.close()
-
-            if not case:
-                flash("해당 사례를 찾을 수 없습니다.", "danger")
-                return redirect(url_for('mypage_case'))
-
-            if case['suspect_status'] == 'arrested':
-                return render_template('case_detail_arrested.html', case=case)
-            else:
-                return render_template('case_detail_unarrested.html', case=case)
-    else:
-            flash("로그인이 필요합니다.", "warning")
-            return redirect(url_for('login'))
-
+            finally:
+                cursor.close()
+            
+            return render_template('mypage_case.html', cases=case_table)
+    
 @bp.route('/mypage/phishing')
-def mypage_phishing():
+def mypage_phishing():  
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))

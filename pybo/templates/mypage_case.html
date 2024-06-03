@@ -46,15 +46,21 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% if cases %}
                     {% for case in cases %}
                     <tr>
-                       <td><a href="{{ url_for('case_detail', case_key=case.case_key) }}">{{ case.bank_account }}</a></td>
+                        <td><a href="{{ url_for('case_detail', case_key=case.case_key) }}">{{ case.bank_account }}</a></td>
                         <td>{{ case.bank_nickname }}</td>
                         <td>{{ case.case_type }}</td>
                         <td>{{ case.case_date }}</td>
-                        <td>{{ case.suspect_status }}</td>   
+                        <td>{{ case.suspect_status }}</td>
                     </tr>
-                    {% endfor %}                  
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="no-cases">등록한 사례가 없습니다.</td>
+                    </tr>
+                {% endif %}                 
                 </tbody>
             </table>
         </section>
