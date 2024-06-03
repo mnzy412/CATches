@@ -90,7 +90,7 @@ def logout():
     session.pop('user_id', None)
     session.pop('user_nick', None)
     session.pop('user_email', None)
-    flash('로그아웃되었습니다.', 'success')
+    #flash('로그아웃되었습니다.', 'success')
     return redirect(url_for('main.index'))
 
 @bp.route('/mypage')
