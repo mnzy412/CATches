@@ -104,50 +104,79 @@ def mypage():
 
 @bp.route('/mypage/case')
 def mypage_case():
-    #if 'user_id' not in session:
-        #flash('로그인이 필요합니다.', 'danger')
-        #return redirect(url_for('main.login'))
+    if 'user_id' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect(url_for('main.login'))
     #return render_template('mypage_case.html')
-    if 'user_id' in session:
-            user_id = session['user_id']
-            db = get_db()
-            cursor = db.cursor()
-            case_list = []
-            try:
-                sql = """
-                SELECT ci.case_key, b.bank_account, b.bank_nickname, cd.case_type, ci.case_date, s.suspect_status 
-                FROM case_info ci 
-                JOIN case_detail cd ON ci.case_key = cd.case_key 
-                JOIN suspects s ON ci.case_key = s.case_key 
-                JOIN bank_info b ON ci.bank_key = b.bank_key 
-                WHERE ci.user_key = %s
-                """
-                cursor.execute(sql, (user_id,))
-                cases = cursor.fetchall()
+
+    user_id = session['user_id']
+    db = get_db()
+    cursor = db.cursor()
+    case_list = []
+    try:
+        sql = """
+        SELECT ci.case_key, b.bank_account, b.bank_nickname, cd.case_type, ci.case_date, s.suspect_status 
+        FROM case_info ci 
+        JOIN case_detail cd ON ci.case_key = cd.case_key 
+        JOIN suspects s ON ci.case_key = s.case_key 
+        JOIN bank_info b ON ci.bank_key = b.bank_key 
+        WHERE ci.user_key = %s
+        """
+        cursor.execute(sql, (user_id,))
+        cases = cursor.fetchall()
                 
-                for case in cases:
-                    case_dict = {
-                        'case_key': case[0],
-                        'bank_account': case[1],
-                        'bank_nickname': case[2],
-                        'case_type': case[3],
-                        'case_date': case[4],
-                        'suspect_status': case[5],
-                    }
-                    case_list.append(case_dict)
-            except pymysql.MySQLError as e:
-                flash(f"Database error: {str(e)}", "danger")
-            finally:
-                cursor.close()
+        for case in cases:
+            case_dict = {
+                'case_key': case[0],
+                'bank_account': case[1],
+                'bank_nickname': case[2],
+                'case_type': case[3],
+                'case_date': case[4],
+                'suspect_status': case[5],
+            }
+            case_list.append(case_dict)
+    except pymysql.MySQLError as e:
+        flash(f"Database error: {str(e)}", "danger")
+    finally:
+        cursor.close()
             
-            return render_template('mypage_case.html', cases=case_list)
+    return render_template('mypage_case.html', cases=case_list)
     
 @bp.route('/mypage/phishing')
 def mypage_phishing():  
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
-    return render_template('mypage_phishing.html')
+    #return render_template('mypage_phishing.html')
+    user_id = session['user_id']
+    db = get_db()
+    cursor = db.cursor()
+    phishing_list = []  # phishing_list 초기화
+    try:
+        sql = """
+        SELECT ps.phishing_key, p.platform_name, p.platform_url, ps.phishing_type, ps.phishing_date 
+        FROM phishing_sites ps 
+        JOIN platform p ON ps.platform_key = p.platform_key 
+        WHERE ps.user_key = %s
+        """
+        cursor.execute(sql, (user_id,))
+        phishing_sites = cursor.fetchall()
+        
+        for site in phishing_sites:
+            site_dict = {
+                'phishing_key': site['phishing_key'],
+                'platform_name': site['platform_name'],
+                'platform_url': site['platform_url'],
+                'phishing_type': site['phishing_type'],
+                'phishing_date': site['phishing_date'],
+            }
+            phishing_list.append(site_dict)
+    except pymysql.MySQLError as e:
+        flash(f"Database error: {str(e)}", "danger")
+    finally:
+        cursor.close()
+    
+    return render_template('mypage_phishing.html', phishing_sites=phishing_list)
 
 @bp.route('/user_info')
 def user_info():
