@@ -112,7 +112,7 @@ def mypage_case():
             user_id = session['user_id']
             db = get_db()
             cursor = db.cursor()
-            case_table = []
+            case_list = []
             try:
                 sql = """
                 SELECT ci.case_key, b.bank_account, b.bank_nickname, cd.case_type, ci.case_date, s.suspect_status 
@@ -127,20 +127,20 @@ def mypage_case():
                 
                 for case in cases:
                     case_dict = {
-                        'case_key': case['case_key'],
-                        'bank_account': case['bank_account'],
-                        'bank_nickname': case['bank_nickname'],
-                        'case_type': case['case_type'],
-                        'case_date': case['case_date'],
-                        'suspect_status': case['suspect_status'],
+                        'case_key': case[0],
+                        'bank_account': case[1],
+                        'bank_nickname': case[2],
+                        'case_type': case[3],
+                        'case_date': case[4],
+                        'suspect_status': case[5],
                     }
-                    case_table.append(case_dict)
+                    case_list.append(case_dict)
             except pymysql.MySQLError as e:
                 flash(f"Database error: {str(e)}", "danger")
             finally:
                 cursor.close()
             
-            return render_template('mypage_case.html', cases=case_table)
+            return render_template('mypage_case.html', cases=case_list)
     
 @bp.route('/mypage/phishing')
 def mypage_phishing():  
