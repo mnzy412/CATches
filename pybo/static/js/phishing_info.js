@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         if (validateForm()) {
             alert('양식이 제출되었습니다.');
-            // form.submit(); // 실제로 폼을 제출하려면 이 줄의 주석을 해제하세요
+            form.submit(); // 실제로 폼을 제출하려면 이 줄의 주석을 해제하세요
         } else {
             alert('양식을 다시 작성해주세요.');
         }

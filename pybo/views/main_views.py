@@ -1,17 +1,21 @@
-# main_views.py
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, g, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+import pymysql
 import random
 import string
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
-import pymysql
+from datetime import timedelta, datetime
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
-def get_db():
-    if 'db' not in g:
-        g.db = current_app.get_db()
-    return g.db
+# 데이터베이스 연결 설정
+db = pymysql.connect(
+    host='localhost', 
+    user='root', 
+    password='root', 
+    db='catchesdb', 
+    charset='utf8'
+)
+cursor = db.cursor()
 
 # 닉네임 생성 로직 수정
 nick_prefixes = ["더보이즈", "투바투", "엔시티", "스키즈", "제베원", "투어스", "라이즈", "보넥도", "뉴진스", "에스파"]
@@ -38,8 +42,6 @@ def register():
         password = generate_password_hash(request.form['password'])  # 비밀번호 해시화
         user_nick = generate_random_nick()
 
-        db = get_db()
-        cursor = db.cursor()
         try:
             sql = "INSERT INTO users (email, password, user_name, status, user_nick, user_phone) VALUES (%s, %s, %s, 'active', %s, %s)"
             cursor.execute(sql, (email, password, user_name, user_nick, user_phone))
@@ -59,23 +61,18 @@ def login():
         password = request.form['password']
         remember = request.form.get('remember')
         
-        db = get_db()
-        cursor = db.cursor()
         try:
             sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
             cursor.execute(sql, (email,))
             user = cursor.fetchone()
             
-            if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호
-                session['user_id'] = user[0]  # user[0]이 사용자 ID
-                session['user_nick'] = user[5]  # user[5]가 사용자 닉네임
-                session['user_email'] = user[1]  # user[1]이 사용자 이메일
+            if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
+                session['user_id'] = user[0]  # user[0]이 사용자 ID라고 가정
+                session['user_nick'] = user[5]  # user[5]가 사용자 닉네임이라고 가정
+                session['user_email'] = user[1]  # user[1]이 사용자 이메일이라고 가정
                 if remember:
                     session.permanent = True
-                    current_app.permanent_session_lifetime = timedelta(hours=3)  # 3시간 동안 세션 유지
-                else:
-                    session.permanent = True
-                    current_app.permanent_session_lifetime = timedelta(hours=1)  # 1시간 동안 세션 유지
+                    bp.permanent_session_lifetime = timedelta(days=30)  # 30일 동안 세션 유지
                 #flash('로그인 성공!', 'success')
                 return redirect(url_for('main.index'))  # 로그인 성공 시 마이페이지로 리다이렉트
             else:
@@ -90,7 +87,7 @@ def logout():
     session.pop('user_id', None)
     session.pop('user_nick', None)
     session.pop('user_email', None)
-    flash('로그아웃되었습니다.', 'success')
+    #flash('로그아웃되었습니다.', 'success')
     return redirect(url_for('main.index'))
 
 @bp.route('/mypage')
@@ -185,8 +182,6 @@ def user_info():
         return redirect(url_for('main.login'))
 
     user_id = session['user_id']
-    db = get_db()
-    cursor = db.cursor()
     try:
         sql = "SELECT user_name, user_phone FROM users WHERE user_key = %s"
         cursor.execute(sql, (user_id,))
@@ -200,25 +195,19 @@ def user_info():
 
 @bp.route('/withdraw', methods=['GET', 'POST'])
 def user_withdraw():
-    if 'user_id' not in session:
-        flash('로그인이 필요합니다.', 'danger')
-        return redirect(url_for('main.login'))
-      
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
         
-        db = get_db()
-        cursor = db.cursor()
         try:
             sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
             cursor.execute(sql, (email,))
             user = cursor.fetchone()
             
-            if user and user[1] == session.get('user_email') and check_password_hash(user[2], password):
+            if user and check_password_hash(user[2], password):
                 return render_template('withdraw_confirm.html', email=email)
             else:
-                flash('현재 로그인된 계정의 이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
+                flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
         except pymysql.MySQLError as e:
             flash(f"탈퇴 처리 중 오류가 발생했습니다: {e}", 'danger')
     
@@ -232,8 +221,6 @@ def withdraw_confirm():
     
     if 'agree' in request.form:
         user_id = session['user_id']
-        db = get_db()
-        cursor = db.cursor()
         try:
             sql = "UPDATE users SET status = 'deleted', deleted_at = %s WHERE user_key = %s"
             cursor.execute(sql, (datetime.now(), user_id))
@@ -278,31 +265,36 @@ def case_info():
     current_time = datetime.now()
     case_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
-    db = get_db()
-    cursor = db.cursor()
     try:
-        suspect_sql = "INSERT INTO suspects (suspect_phone, suspect_status) VALUES (%s,'unarrested')"
-        cursor.execute(suspect_sql, (suspect_phone))
+        # Suspect insertion
+        suspect_sql = "INSERT INTO suspects (suspect_phone, suspect_status) VALUES (%s, 'unarrested');"
+        cursor.execute(suspect_sql, (suspect_phone,))
         suspect_pk = cursor.lastrowid
 
-        platform_sql = "INSERT INTO platform (platform_name, platform_url, suspent_id) VALUES (%s, %s, %s)"
+        # Platform insertion
+        platform_sql = "INSERT INTO platform (platform_name, platform_url, suspent_id) VALUES (%s, %s, %s);"
         cursor.execute(platform_sql, (platform_name, platform_url, suspect_id))
         platform_pk = cursor.lastrowid
 
-        bank_code_sql = "INSERT INTO bank_code (bank_name) VALUES (%s)"
-        cursor.execute(bank_code_sql, (bank_name))
+        # Bank code insertion
+        bank_code_sql = "INSERT INTO bank_code (bank_name) VALUES (%s);"
+        cursor.execute(bank_code_sql, (bank_name,))
         bank_code_pk = cursor.lastrowid
 
-        bank_sql = "INSERT INTO bank (suspect_key, bank_account, bank_nickname, bank_code) VALUES (%s, %s, %s, %s)"
+        # Bank insertion
+        bank_sql = "INSERT INTO bank (suspect_key, bank_account, bank_nickname, bank_code) VALUES (%s, %s, %s, %s);"
         cursor.execute(bank_sql, (suspect_pk, bank_account, bank_nickname, bank_code_pk))
         bank_pk = cursor.lastrowid
 
-        info_sql = "INSERT INTO case_info (user_key, platform_key, bank_key, case_date, case_status) VALUES (%s, %s, %s, %s, 'continue')"
+        # Case info insertion
+        info_sql = "INSERT INTO case_info (user_key, platform_key, bank_key, case_date, case_status) VALUES (%s, %s, %s, %s, 'continue');"
         cursor.execute(info_sql, (user_id, platform_pk, bank_pk, case_date))
         info_pk = cursor.lastrowid
 
-        detail_sql = "INSERT INTO case_detail (case_key, case_type, case_item, case_price, bank_date, case_content) VALUES (%s, %s, %s, %s, %s, %s)"
+        # Case detail insertion
+        detail_sql = "INSERT INTO case_detail (case_key, case_type, case_item, case_price, bank_date, case_content) VALUES (%s, %s, %s, %s, %s, %s);"
         cursor.execute(detail_sql, (info_pk, case_type, case_item, case_price, bank_date, case_content))
+        
         db.commit()
         flash('피해사례 등록이 성공적으로 완료되었습니다.', 'success')
         return redirect(url_for('main.index'))  # 변경: url_for('main.index')로 수정합니다.
@@ -328,14 +320,14 @@ def phishing_info():
     current_time = datetime.now()
     phishing_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
-    db = get_db()
-    cursor = db.cursor()
     try:
+        # Insert into phishing_info table
         phishing_sql = "INSERT INTO phishing_info (user_key, phishing_count, phishing_date, phishing_url) VALUES (%s, %s, %s, %s)"
         cursor.execute(phishing_sql, (user_id, phishing_count, phishing_date, phishing_url))
         phishing_pk = cursor.lastrowid
 
-        phishing_detail_sql = "INSERT INTO phishing_info (phishing_key, site_type, site_name, site_content) VALUES (%s, %s, %s, %s)"
+        # Insert into phishing_detail table (assuming the table is named phishing_detail)
+        phishing_detail_sql = "INSERT INTO phishing_detail (phishing_key, site_type, site_name, site_content) VALUES (%s, %s, %s, %s)"
         cursor.execute(phishing_detail_sql, (phishing_pk, site_type, site_name, site_content))
 
         db.commit()
@@ -344,10 +336,10 @@ def phishing_info():
 
     except pymysql.MySQLError as e:
         db.rollback()
-        flash(f"피해사례 등록 중 오류가 발생했습니다: {e}", 'danger')
-
+        flash(f"피싱사이트 등록 중 오류가 발생했습니다: {e}", 'danger')
 
     return render_template('phishing_info.html')
+
 
 @bp.route('/case_list', methods=['GET'])
 def case_list():
@@ -456,7 +448,43 @@ def case_detail(case_key):
         flash(f"상세 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.case_list'))
 
-
-@bp.route('/phishing_detail')
+@bp.route('/phishing_detail', methods=['GET'])
 def phishing_detail():
-    return render_template('phishing_detail.html')
+    phishing_info = request.args.get('phishingInfo').strip()
+
+    try:
+        # 피싱 사이트 정보 조회
+        sql = """
+            SELECT pi.phishing_key, pi.phishing_url, pd.site_name, pd.site_type, pd.site_content, pi.phishing_date, pi.phishing_count
+            FROM phishing_info pi
+            JOIN phishing_detail pd ON pi.phishing_key = pd.phishing_key
+            WHERE pi.phishing_url = %s OR pd.site_name = %s
+        """
+        cursor.execute(sql, (phishing_info, phishing_info))
+        phishing_detail = cursor.fetchone()
+
+        if phishing_detail:
+            phishing_data = {
+                'phishing_key': phishing_detail[0],
+                'site_url': phishing_detail[1],
+                'site_name': phishing_detail[2],
+                'site_type': phishing_detail[3],
+                'site_content': phishing_detail[4],
+                'phishing_date': phishing_detail[5],
+                'phishing_count': phishing_detail[6]
+            }
+
+            # 조회 수 증가
+            update_sql = "UPDATE phishing_info SET phishing_count = phishing_count + 1 WHERE phishing_key = %s"
+            cursor.execute(update_sql, (phishing_data['phishing_key'],))
+            db.commit()
+
+            return render_template('phishing_detail.html', phishing_data=phishing_data)
+        else:
+            flash('해당 피싱 사이트 정보를 찾을 수 없습니다.', 'danger')
+            return redirect(url_for('main.phishing_search'))
+    
+    except pymysql.MySQLError as e:
+        db.rollback()
+        flash(f"피싱 사이트 조회 중 오류가 발생했습니다: {e}", 'danger')
+        return redirect(url_for('main.phishing_search'))
