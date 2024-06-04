@@ -38,61 +38,27 @@
             <table class="phishing-table">
                 <thead>
                     <tr>
-                        <th>계좌번호</th>
-                        <th>명의자 성명</th>
-                        <th>피해 유형</th>
+                        <th>플랫폼 이름</th>
+                        <th>플랫폼 URL</th>
+                        <th>피싱 유형</th>
                         <th>등록일</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>계좌번호01</td>
-                        <td>김00</td>
-                        <td>온라인</td>
-                        <td>2024.05.05</td>
-                    </tr>
-                    <tr>
-                        <td>계좌번호01</td>
-                        <td>김00</td>
-                        <td>온라인</td>
-                        <td>2024.05.05</td>
-                    </tr>
-                    <tr>
-                        <td>계좌번호01</td>
-                        <td>김00</td>
-                        <td>온라인</td>
-                        <td>2024.05.05</td>
-                    </tr>
-                    <tr>
-                        <td>계좌번호01</td>
-                        <td>김00</td>
-                        <td>온라인</td>
-                        <td>2024.05.05</td>
-                    </tr>
-                    <tr>
-                        <td>계좌번호01</td>
-                        <td>김00</td>
-                        <td>온라인</td>
-                        <td>2024.05.05</td>
-                    </tr>
-                    <tr>
-                        <td>계좌번호01</td>
-                        <td>김00</td>
-                        <td>온라인</td>
-                        <td>2024.05.05</td>
-                    </tr>
-                    <tr>
-                        <td>계좌번호01</td>
-                        <td>김00</td>
-                        <td>온라인</td>
-                        <td>2024.05.05</td>
-                    </tr>
-                    <tr>
-                        <td>계좌번호01</td>
-                        <td>김00</td>
-                        <td>온라인</td>
-                        <td>2024.05.05</td>
-                    </tr>
+                    {% if phishing_sites %}
+                        {% for site in phishing_sites %}
+                        <tr>
+                            <td><a href="{{ url_for('phishing_detail', phishing_key=site.phishing_key) }}">{{ site.platform_name }}</a></td>
+                            <td>{{ site.platform_url }}</td>
+                            <td>{{ site.phishing_type }}</td>
+                            <td>{{ site.phishing_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="no-sites">등록한 피싱 사이트가 없습니다.</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </section>
