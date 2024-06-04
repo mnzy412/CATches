@@ -15,7 +15,7 @@ db = pymysql.connect(
     db='catchesdb', 
     charset='utf8'
 )
-cursor = db.cursor()
+glbal_cursor = db.cursor()
 
 # 닉네임 생성 로직 수정
 nick_prefixes = ["더보이즈", "투바투", "엔시티", "스키즈", "제베원", "투어스", "라이즈", "보넥도", "뉴진스", "에스파"]
@@ -43,6 +43,7 @@ def register():
         user_nick = generate_random_nick()
 
         try:
+            cursor = db.cursor()
             sql = "INSERT INTO users (email, password, user_name, status, user_nick, user_phone) VALUES (%s, %s, %s, 'active', %s, %s)"
             cursor.execute(sql, (email, password, user_name, user_nick, user_phone))
             db.commit()
@@ -63,6 +64,7 @@ def login():
         
         try:
             sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
+            cursor = db.cursor()
             cursor.execute(sql, (email,))
             user = cursor.fetchone()
             
@@ -107,19 +109,19 @@ def mypage_case():
     #return render_template('mypage_case.html')
 
     user_id = session['user_id']
-    db = get_db()
-    cursor = db.cursor()
+
     case_list = []
     try:
+        cursor = db.cursor()
         sql = """
         SELECT ci.case_key, b.bank_account, b.bank_nickname, cd.case_type, ci.case_date, s.suspect_status 
         FROM case_info ci 
         JOIN case_detail cd ON ci.case_key = cd.case_key 
-        JOIN suspects s ON ci.case_key = s.case_key 
-        JOIN bank_info b ON ci.bank_key = b.bank_key 
+        JOIN bank b ON ci.bank_key = b.bank_key 
+        JOIN suspects s ON b.suspect_key = s.suspect_key 
         WHERE ci.user_key = %s
         """
-        cursor.execute(sql, (user_id,))
+        cursor.execute(sql, (user_id))
         cases = cursor.fetchall()
                 
         for case in cases:
@@ -146,26 +148,26 @@ def mypage_phishing():
         return redirect(url_for('main.login'))
     #return render_template('mypage_phishing.html')
     user_id = session['user_id']
-    db = get_db()
-    cursor = db.cursor()
+
     phishing_list = []  # phishing_list 초기화
     try:
+        cursor = db.cursor()
         sql = """
-        SELECT ps.phishing_key, p.platform_name, p.platform_url, ps.phishing_type, ps.phishing_date 
-        FROM phishing_sites ps 
-        JOIN platform p ON ps.platform_key = p.platform_key 
-        WHERE ps.user_key = %s
+        SELECT pi.phishing_key, pd.site_name, pi.phishing_url, pd.site_type, pi.phishing_date 
+        FROM phishing_info pi 
+        JOIN phishing_detail pd ON pi.phishing_key = pd.phishing_key 
+        WHERE pi.user_key = %s
         """
         cursor.execute(sql, (user_id,))
         phishing_sites = cursor.fetchall()
         
         for site in phishing_sites:
             site_dict = {
-                'phishing_key': site['phishing_key'],
-                'platform_name': site['platform_name'],
-                'platform_url': site['platform_url'],
-                'phishing_type': site['phishing_type'],
-                'phishing_date': site['phishing_date'],
+                'phishing_key': site[0],
+                'platform_name': site[1],
+                'platform_url': site[2],
+                'phishing_type': site[3],
+                'phishing_date': site[4],
             }
             phishing_list.append(site_dict)
     except pymysql.MySQLError as e:
@@ -183,6 +185,7 @@ def user_info():
 
     user_id = session['user_id']
     try:
+        cursor = db.cursor()
         sql = "SELECT user_name, user_phone FROM users WHERE user_key = %s"
         cursor.execute(sql, (user_id,))
         user = cursor.fetchone()
@@ -200,6 +203,7 @@ def user_withdraw():
         password = request.form['password']
         
         try:
+            cursor = db.cursor()
             sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
             cursor.execute(sql, (email,))
             user = cursor.fetchone()
@@ -222,6 +226,7 @@ def withdraw_confirm():
     if 'agree' in request.form:
         user_id = session['user_id']
         try:
+            cursor = db.cursor()
             sql = "UPDATE users SET status = 'deleted', deleted_at = %s WHERE user_key = %s"
             cursor.execute(sql, (datetime.now(), user_id))
             db.commit()
@@ -266,6 +271,8 @@ def case_info():
         case_content = request.form['case_description']
         current_time = datetime.now()
         case_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
+
+        cursor = db.cursor()
 
         try:
             # Suspect insertion
@@ -324,6 +331,7 @@ def phishing_info():
         phishing_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
         try:
+            cursor = db.cursor()
             # Insert into phishing_info table
             phishing_sql = "INSERT INTO phishing_info (user_key, phishing_count, phishing_date, phishing_url) VALUES (%s, %s, %s, %s)"
             cursor.execute(phishing_sql, (user_id, phishing_count, phishing_date, phishing_url))
@@ -354,6 +362,7 @@ def case_list():
         return redirect(url_for('main.case_search'))
 
     try:
+        cursor = db.cursor()
         if case_info.isdigit() and len(case_info) == 11:
             # 11자리 숫자인 경우 suspects 테이블 조회
             sql = """
@@ -401,6 +410,7 @@ def case_list():
 @bp.route('/case_detail/<int:case_key>')
 def case_detail(case_key):
     try:
+        cursor = db.cursor()
         sql = """
             SELECT i.case_key, b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status, 
                    s.suspect_phone, s.suspect_sex, s.suspect_age, s.suspect_credit, s.suspect_country, 
@@ -414,11 +424,13 @@ def case_detail(case_key):
             LEFT JOIN polices po ON s.police_key = po.police_key
             WHERE i.case_key = %s
         """
-        cursor.execute(sql, (case_key,))
+        # cursor = db.cursor()
+        cursor.execute(sql, (case_key))
         case = cursor.fetchone()
-
+        print(case)
         if not case:
             flash("해당 사례를 찾을 수 없습니다.", 'danger')
+            print('응 사례없어')
             return redirect(url_for('main.case_list'))
 
         case_info = {
@@ -442,29 +454,34 @@ def case_detail(case_key):
             'police_name': case[17],
             'police_location': case[18]
         }
-
+        print("=========여까지됨")
         if case_info['suspect_status'] == 'arrested':
             return render_template('case_detail_arrested.html', case=case_info)
         else:
             return render_template('case_detail_unarrested.html', case=case_info)
 
     except pymysql.MySQLError as e:
+        print(f"상세 조회 중 오류가 발생했습니다: {e}", 'danger')
+
         flash(f"상세 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.case_list'))
 
 @bp.route('/phishing_detail', methods=['GET'])
 def phishing_detail():
-    phishing_info = request.args.get('phishingInfo').strip()
-
+    phishing_key = request.args.get('phishing_key')
+    phishing_info = request.args.get('phishingInfo')
+    # 현재 피싱키 기준으로 상세조회가 가능.
+    # 추후 사이트 이름 기반 검색기능 추가시 아래 sql 수정 필요
     try:
+        cursor = db.cursor()
         # 피싱 사이트 정보 조회
         sql = """
             SELECT pi.phishing_key, pi.phishing_url, pd.site_name, pd.site_type, pd.site_content, pi.phishing_date, pi.phishing_count
             FROM phishing_info pi
             JOIN phishing_detail pd ON pi.phishing_key = pd.phishing_key
-            WHERE pi.phishing_url = %s OR pd.site_name = %s
+            WHERE pi.phishing_url = %s OR pd.site_name = %s OR pi.phishing_key=%s
         """
-        cursor.execute(sql, (phishing_info, phishing_info))
+        cursor.execute(sql, (phishing_info, phishing_info, phishing_key))
         phishing_detail = cursor.fetchone()
 
         if phishing_detail:
@@ -490,5 +507,7 @@ def phishing_detail():
     
     except pymysql.MySQLError as e:
         db.rollback()
+        print(f"피싱 사이트 조회 중 오류가 발생했습니다: {e}", 'danger')
+
         flash(f"피싱 사이트 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.phishing_search'))

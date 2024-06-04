@@ -48,7 +48,7 @@
                     {% if phishing_sites %}
                         {% for site in phishing_sites %}
                         <tr>
-                            <td><a href="{{ url_for('phishing_detail', phishing_key=site.phishing_key) }}">{{ site.platform_name }}</a></td>
+                            <td><a href="{{ url_for('main.phishing_detail', phishing_key=site.phishing_key) }}">{{ site.platform_name }}</a></td>
                             <td>{{ site.platform_url }}</td>
                             <td>{{ site.phishing_type }}</td>
                             <td>{{ site.phishing_date }}</td>
