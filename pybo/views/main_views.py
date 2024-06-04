@@ -243,102 +243,106 @@ def case_search():
 def phishing_search():
     return render_template('phishing_search.html')
 
-@bp.route('/case_info')
+@bp.route('/case_info', methods = ["POST","GET"])
 def case_info():
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
     
-    user_id = session['user_id']
-    bank_name = request.args.get('bank_name')
-    bank_account = request.args.get('bank_account')
-    bank_nickname = request.args.get('bank_nickname')
-    suspect_phone = request.args.get('suspect_phone')
-    bank_date = request.args.get('case_date')
-    case_price = request.args.get('case_price')
-    case_type = request.args.get('case_type')
-    case_item = request.args.get('case_item')
-    platform_name = request.args.get('platform_type')
-    suspect_id = request.args.get('suspect_key')
-    platform_url = request.args.get('phishing_url')
-    case_content = request.args.get('case_description')
-    current_time = datetime.now()
-    case_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    if request.method=='POST' :
+            
+        user_id = session['user_id']
+        bank_name = request.form['bank_name']
+        bank_account = request.form['bank_account']
+        bank_nickname = request.form['bank_nickname']
+        suspect_phone = request.form['suspect_phone']
+        bank_date = request.form['case_date']
+        case_price = request.form['case_price']
+        case_type = request.form['case_type']
+        case_item = request.form['case_item']
+        platform_name = request.form['platform_type']
+        suspect_id = request.form['suspect_key']
+        platform_url = request.form['phishing_url']
+        case_content = request.form['case_description']
+        current_time = datetime.now()
+        case_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
-    try:
-        # Suspect insertion
-        suspect_sql = "INSERT INTO suspects (suspect_phone, suspect_status) VALUES (%s, 'unarrested');"
-        cursor.execute(suspect_sql, (suspect_phone,))
-        suspect_pk = cursor.lastrowid
+        try:
+            # Suspect insertion
+            suspect_sql = "INSERT INTO suspects (suspect_phone, suspect_status) VALUES (%s, 'unarrested');"
+            cursor.execute(suspect_sql, (suspect_phone,))
+            suspect_pk = cursor.lastrowid
 
-        # Platform insertion
-        platform_sql = "INSERT INTO platform (platform_name, platform_url, suspent_id) VALUES (%s, %s, %s);"
-        cursor.execute(platform_sql, (platform_name, platform_url, suspect_id))
-        platform_pk = cursor.lastrowid
+            # Platform insertion
+            platform_sql = "INSERT INTO platform (platform_name, platform_url, suspent_id) VALUES (%s, %s, %s);"
+            cursor.execute(platform_sql, (platform_name, platform_url, suspect_id))
+            platform_pk = cursor.lastrowid
 
-        # Bank code insertion
-        bank_code_sql = "INSERT INTO bank_code (bank_name) VALUES (%s);"
-        cursor.execute(bank_code_sql, (bank_name,))
-        bank_code_pk = cursor.lastrowid
+            # Bank code insertion
+            bank_code_sql = "INSERT INTO bank_code (bank_name) VALUES (%s);"
+            cursor.execute(bank_code_sql, (bank_name,))
+            bank_code_pk = cursor.lastrowid
 
-        # Bank insertion
-        bank_sql = "INSERT INTO bank (suspect_key, bank_account, bank_nickname, bank_code) VALUES (%s, %s, %s, %s);"
-        cursor.execute(bank_sql, (suspect_pk, bank_account, bank_nickname, bank_code_pk))
-        bank_pk = cursor.lastrowid
+            # Bank insertion
+            bank_sql = "INSERT INTO bank (suspect_key, bank_account, bank_nickname, bank_code) VALUES (%s, %s, %s, %s);"
+            cursor.execute(bank_sql, (suspect_pk, bank_account, bank_nickname, bank_code_pk))
+            bank_pk = cursor.lastrowid
 
-        # Case info insertion
-        info_sql = "INSERT INTO case_info (user_key, platform_key, bank_key, case_date, case_status) VALUES (%s, %s, %s, %s, 'continue');"
-        cursor.execute(info_sql, (user_id, platform_pk, bank_pk, case_date))
-        info_pk = cursor.lastrowid
+            # Case info insertion
+            info_sql = "INSERT INTO case_info (user_key, platform_key, bank_key, case_date, case_status) VALUES (%s, %s, %s, %s, 'continue');"
+            cursor.execute(info_sql, (user_id, platform_pk, bank_pk, case_date))
+            info_pk = cursor.lastrowid
 
-        # Case detail insertion
-        detail_sql = "INSERT INTO case_detail (case_key, case_type, case_item, case_price, bank_date, case_content) VALUES (%s, %s, %s, %s, %s, %s);"
-        cursor.execute(detail_sql, (info_pk, case_type, case_item, case_price, bank_date, case_content))
-        
-        db.commit()
-        flash('피해사례 등록이 성공적으로 완료되었습니다.', 'success')
-        return redirect(url_for('main.index'))  # 변경: url_for('main.index')로 수정합니다.
-        
-    except pymysql.MySQLError as e:
-        db.rollback()
-        flash(f"피해사례 등록 중 오류가 발생했습니다: {e}", 'danger')
+            # Case detail insertion
+            detail_sql = "INSERT INTO case_detail (case_key, case_type, case_item, case_price, bank_date, case_content) VALUES (%s, %s, %s, %s, %s, %s);"
+            cursor.execute(detail_sql, (info_pk, case_type, case_item, case_price, bank_date, case_content))
+            
+            db.commit()
+            flash('피해사례 등록이 성공적으로 완료되었습니다.', 'success')
+            return redirect(url_for('main.index'))  # 변경: url_for('main.index')로 수정합니다.
+            
+        except pymysql.MySQLError as e:
+            db.rollback()
+            flash(f"피해사례 등록 중 오류가 발생했습니다: {e}", 'danger')
+    elif request.method =='GET':
+        return render_template('case_info.html')
 
-    return render_template('case_info.html')
-
-@bp.route('/phishing_info')
+@bp.route('/phishing_info',methods=["POST","GET"])
 def phishing_info():
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
-    
-    user_id = session['user_id']
-    phishing_url = request.args.get('site_url')
-    site_name = request.args.get('site_name')
-    site_type = request.args.get('case_type')
-    site_content = request.args.get('site_content')
-    phishing_count = 0
-    current_time = datetime.now()
-    phishing_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    if request.method == 'POST':
 
-    try:
-        # Insert into phishing_info table
-        phishing_sql = "INSERT INTO phishing_info (user_key, phishing_count, phishing_date, phishing_url) VALUES (%s, %s, %s, %s)"
-        cursor.execute(phishing_sql, (user_id, phishing_count, phishing_date, phishing_url))
-        phishing_pk = cursor.lastrowid
+        user_id = session['user_id']
+        phishing_url = request.form['site_url']
+        site_name = request.form['site_name']
+        site_type = request.form['case_type']
+        site_content = request.form['site_content']
+        phishing_count = 0
+        current_time = datetime.now()
+        phishing_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
-        # Insert into phishing_detail table (assuming the table is named phishing_detail)
-        phishing_detail_sql = "INSERT INTO phishing_detail (phishing_key, site_type, site_name, site_content) VALUES (%s, %s, %s, %s)"
-        cursor.execute(phishing_detail_sql, (phishing_pk, site_type, site_name, site_content))
+        try:
+            # Insert into phishing_info table
+            phishing_sql = "INSERT INTO phishing_info (user_key, phishing_count, phishing_date, phishing_url) VALUES (%s, %s, %s, %s)"
+            cursor.execute(phishing_sql, (user_id, phishing_count, phishing_date, phishing_url))
+            phishing_pk = cursor.lastrowid
 
-        db.commit()
-        flash('피싱사이트 등록이 성공적으로 완료되었습니다.', 'success')
-        return redirect(url_for('main.index'))  # 변경: url_for('main.index')로 수정합니다.
+            # Insert into phishing_detail table (assuming the table is named phishing_detail)
+            phishing_detail_sql = "INSERT INTO phishing_detail (phishing_key, site_type, site_name, site_content) VALUES (%s, %s, %s, %s)"
+            cursor.execute(phishing_detail_sql, (phishing_pk, site_type, site_name, site_content))
 
-    except pymysql.MySQLError as e:
-        db.rollback()
-        flash(f"피싱사이트 등록 중 오류가 발생했습니다: {e}", 'danger')
+            db.commit()
+            flash('피싱사이트 등록이 성공적으로 완료되었습니다.', 'success')
+            return redirect(url_for('main.index'))  # 변경: url_for('main.index')로 수정합니다.
 
-    return render_template('phishing_info.html')
+        except pymysql.MySQLError as e:
+            db.rollback()
+            flash(f"피싱사이트 등록 중 오류가 발생했습니다: {e}", 'danger')
+
+    elif request.method =='GET':
+        return render_template('phishing_info.html')
 
 
 @bp.route('/case_list', methods=['GET'])
