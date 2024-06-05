@@ -70,7 +70,7 @@ def login():
             
             if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
                 session['user_id'] = user[0]  # user[0]이 사용자 ID라고 가정
-                session['user_nick'] = user[5]  # user[5]가 사용자 닉네임이라고 가정
+                session['user_nick'] = user[6]  # user[5]가 사용자 닉네임이라고 가정
                 session['user_email'] = user[1]  # user[1]이 사용자 이메일이라고 가정
                 if remember:
                     session.permanent = True
@@ -405,8 +405,6 @@ def case_list():
         flash(f"검색 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.case_search'))
 
-
-
 @bp.route('/case_detail/<int:case_key>')
 def case_detail(case_key):
     try:
@@ -509,9 +507,57 @@ def phishing_detail():
         flash(f"피싱 사이트 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.phishing_search'))
 
+@bp.route('/case_delete/<int:case_key>', methods=['POST'])
+def case_delete(case_key):
+    if 'user_id' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect(url_for('main.login'))
+
+    try:
+        cursor = db.cursor()
+
+        # 해당 case_key에 연결된 bank_key, platform_key, suspect_key를 가져옵니다.
+        sql_get_keys = """
+        SELECT ci.bank_key, ci.platform_key, b.suspect_key
+        FROM case_info ci
+        JOIN bank b ON ci.bank_key = b.bank_key
+        WHERE ci.case_key = %s
+        """
+        cursor.execute(sql_get_keys, (case_key,))
+        result = cursor.fetchone()
+        if not result:
+            print('해당 사례를 찾을 수 없습니다.', 'danger')
+            return redirect(url_for('main.case_search'))
+
+        bank_key, platform_key, suspect_key = result
+
+        # 관련 데이터를 삭제
+        sql_delete_case_detail = "DELETE FROM case_detail WHERE case_key = %s"
+        sql_delete_case_info = "DELETE FROM case_info WHERE case_key = %s"
+        sql_delete_bank = "DELETE FROM bank WHERE bank_key = %s"
+        sql_delete_platform = "DELETE FROM platform WHERE platform_key = %s"
+        sql_delete_suspect = "DELETE FROM suspects WHERE suspect_key = %s"
+
+        cursor.execute(sql_delete_case_detail, (case_key,))
+        cursor.execute(sql_delete_case_info, (case_key,))
+        cursor.execute(sql_delete_bank, (bank_key,))
+        cursor.execute(sql_delete_platform, (platform_key,))
+        cursor.execute(sql_delete_suspect, (suspect_key,))
+
+        db.commit()
+        print('사례가 성공적으로 삭제되었습니다.', 'success')
+    except pymysql.MySQLError as e:
+        db.rollback()
+        print(f"사례 삭제 중 오류가 발생했습니다: {e}", 'danger')
+    
+    return redirect(url_for('main.case_search'))
+
+
 @bp.route('/phishing_delete/<int:phishing_key>', methods=['POST'])
 def phishing_delete(phishing_key):
-    print('삭제')
+    if 'user_id' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect(url_for('main.login'))
     try:
         cursor = db.cursor()
         # 피싱 사이트 관련 데이터를 삭제

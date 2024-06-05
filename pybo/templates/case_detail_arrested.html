@@ -117,6 +117,13 @@
                     <textarea id="case_description" name="case_description" rows="4" placeholder="어제 사기 당했어요... ㅜㅜ" required aria-label="사건 개요" readonly></textarea>
                 </div>
             </form>
+            <div>
+                {% if 'user_id' in session %}
+                <form method="post" action="{{ url_for('main.case_delete', case_key=case.case_key) }}">
+                    <button type="submit" class="submit-btn" id="DelSubmitBtn">삭제하기</button>
+                </form>
+                {% endif %}
+            </div>            
         </section>
     </main>
     <script>
