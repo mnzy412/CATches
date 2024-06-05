@@ -429,8 +429,6 @@ def case_detail(case_key):
         case = cursor.fetchone()
         print(case)
         if not case:
-            flash("해당 사례를 찾을 수 없습니다.", 'danger')
-            print('응 사례없어')
             return redirect(url_for('main.case_list'))
 
         case_info = {
@@ -454,7 +452,6 @@ def case_detail(case_key):
             'police_name': case[17],
             'police_location': case[18]
         }
-        print("=========여까지됨")
         if case_info['suspect_status'] == 'arrested':
             return render_template('case_detail_arrested.html', case=case_info)
         else:
