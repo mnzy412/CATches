@@ -70,7 +70,7 @@ def login():
             
             if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
                 session['user_id'] = user[0]  # user[0]이 사용자 ID라고 가정
-                session['user_nick'] = user[5]  # user[5]가 사용자 닉네임이라고 가정
+                session['user_nick'] = user[6]  # user[5]가 사용자 닉네임이라고 가정
                 session['user_email'] = user[1]  # user[1]이 사용자 이메일이라고 가정
                 if remember:
                     session.permanent = True
