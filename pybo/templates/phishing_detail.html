@@ -65,6 +65,13 @@
                     <input type="text" id="phishing_count" name="phishing_count" value="{{ phishing_data.phishing_count }}" readonly>
                 </div>
             </form>
+            <div>
+                {% if 'user_id' in session %}
+                <form method="post" action="{{ url_for('main.phishing_delete', phishing_key=phishing_data.phishing_key) }}">
+                    <button type="submit" class="submit-btn" id="DelSubmitBtn">삭제하기</button>
+                </form>
+                {% endif %}
+            </div>
         </section>
     </main>
     <script>

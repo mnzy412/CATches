@@ -203,6 +203,19 @@ form .radio-group input {
     opacity: 0.6; /* 비활성화된 버튼 시각적 표시 */
 }
 
+.submit-btn {
+    background-color: #7813C0;
+    color: white;
+    padding: 15px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+}
+
 label[for="case_type"], 
 label[for="platform_type"], 
 label[for="site_url"], 

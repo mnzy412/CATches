@@ -508,3 +508,23 @@ def phishing_detail():
 
         flash(f"피싱 사이트 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.phishing_search'))
+
+@bp.route('/phishing_delete/<int:phishing_key>', methods=['POST'])
+def phishing_delete(phishing_key):
+    print('삭제')
+    try:
+        cursor = db.cursor()
+        # 피싱 사이트 관련 데이터를 삭제
+        sql_delete_phishing_detail = "DELETE FROM phishing_detail WHERE phishing_key = %s"
+        sql_delete_phishing_info = "DELETE FROM phishing_info WHERE phishing_key = %s"
+        
+        cursor.execute(sql_delete_phishing_detail, (phishing_key,))
+        cursor.execute(sql_delete_phishing_info, (phishing_key,))
+        
+        db.commit()
+        print('피싱 사이트가 성공적으로 삭제되었습니다.', 'success')
+    except pymysql.MySQLError as e:
+        db.rollback()
+        print(f"피싱 사이트 삭제 중 오류가 발생했습니다: {e}", 'danger')
+
+    return redirect(url_for('main.phishing_search'))
