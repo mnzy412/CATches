@@ -51,6 +51,15 @@
     </style>
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
     <header class="header">
         <div class="catches-logo"></div>
         <div class="header-wrapper">
@@ -69,10 +78,10 @@
     <main class="main-content full-width">
         <section>
             <h1>피해 사례 등록</h1>
-            <form class="full-width">
+            <form class="full-width" method="post">
                 <div class="form-group input-container">
                     <label for="bank-name" class="fixed-label">은행명</label>
-                    <input type="text" id="bank-name" name="bank-name" placeholder="xx은행" required aria-label="은행명">
+                    <input type="text" id="bank-name" name="bank_name" placeholder="xx은행" required aria-label="은행명">
                     <div class="error-tooltip" id="error-bank-name"></div>
                 </div>
                 <div class="form-group input-container">
@@ -137,8 +146,9 @@
                     <textarea id="case_description" name="case_description" rows="4" placeholder="어제 사기 당했어요... ㅜㅜ" required aria-label="사건 개요"></textarea>
                     <div class="error-tooltip" id="error-case-description"></div>
                 </div>
+                <button type="submit" class="submit-btn full-width" id="InfoSubmitBtn" >사건 등록하기</button>
             </form>
-            <button type="submit" class="submit-btn" id="InfoSubmitBtn" disabled>사건 등록하기</button>
+            
         </section>
     </main>
 </body>

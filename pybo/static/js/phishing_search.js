@@ -1,4 +1,3 @@
-//자기가 검색한 피싱 사이트와 동일한 URL만 보이도록 함
 document.addEventListener('DOMContentLoaded', function () {
     const phishingInfoInput = document.getElementById('phishingInfo');
     const phishingSubmitBtn = document.getElementById('PhishingSubmitBtn');
@@ -15,16 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const isUrlValid = urlRegex.test(phishingInfoValue);
         const isNameValid = nameRegex.test(phishingInfoValue) && !/^\d+$/.test(phishingInfoValue); // 숫자만 입력 방지
 
-        if (isUrlValid || isNameValid) {
-            phishingSubmitBtn.disabled = false;
-        } else {
-            phishingSubmitBtn.disabled = true;
-        }
+        phishingSubmitBtn.disabled = !(isUrlValid || isNameValid);
     }
 
     // 폼 제출 이벤트 핸들러
     phishingSearchForm.addEventListener('submit', function (event) {
-        event.preventDefault();
         const phishingInfoValue = phishingInfoInput.value.trim();
 
         // 입력값 검증
@@ -36,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!isUrlValid && !isNameValid) {
             alert("URL 형식 또는 올바른 피싱 사이트 이름을 입력해주세요.");
+            event.preventDefault();
             return;
         }
 
@@ -52,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 입력 필드 이벤트 리스너 추가
     phishingInfoInput.addEventListener('input', validateInput);
-});
 
-//이제 하나의 입력창에서 'URL' 또는 '피싱 사이트 이름' 중 하나를 입력할 수 있으며, 각 값을 올바르게 검증할 수 있습니다.
-// 폼이 제출될 때 어떤 타입의 검색어인지도 확인할 수 있습니다.
+    // 초기 검증
+    validateInput();
+});

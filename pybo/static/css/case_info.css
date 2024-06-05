@@ -207,6 +207,7 @@ label[for="platform_type"] {
 }
 
 .submit-btn {
+    grid-column: span 2;
     background-color: #7813C0;
     color: white;
     padding: 20px 0;

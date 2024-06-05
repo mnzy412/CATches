@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
         valid &= validateField(suspectPhone, /^\d{11}$/, '연락처는 숫자 11자리여야 합니다.', 'suspect_phone');
         valid &= validateField(casePrice, /^\d+$/, '입금 금액은 숫자만 포함해야 합니다.', 'case_price');
         valid &= validateField(caseItem, specialCharPattern, '특수문자나 특수기호는 입력할 수 없습니다.', 'case_item');
-        valid &= validateField(suspectKey, specialCharPattern, '특수문자나 특수기호는 입력할 수 없습니다.', 'suspect_key');
+        valid &= validateField(suspectKey, /.*/, '특수문자나 특수기호를 포함할 수 있습니다.', 'suspect_key'); // 특수문자 허용
         valid &= validateField(phishingUrl, /^(http:\/\/|https:\/\/)[^\s$.?#].[^\s]*$/, 'URL 형식이 올바르지 않습니다.', 'phishing_url');
         
         if (!caseDate.value.trim()) {
@@ -98,12 +98,32 @@ document.addEventListener('DOMContentLoaded', function () {
         return valid;
     }
 
+    [bankName, bankAccount, bankNickname, suspectPhone, casePrice, caseItem, suspectKey, phishingUrl, caseDate, caseDescription].forEach(field => {
+        field.addEventListener('focus', function () {
+            validateField(field, getFieldPattern(field), getFieldMessage(field), field.id);
+        });
+
+        field.addEventListener('input', function () {
+            validateField(field, getFieldPattern(field), getFieldMessage(field), field.id);
+            submitBtn.disabled = !isFormValid();
+        });
+    });
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (isFormValid()) {
+            alert('양식이 제출되었습니다.');
+            form.submit(); // 실제로 폼을 제출하려면 이 줄의 주석을 해제하세요
+        } else {
+            alert('양식을 다시 작성해주세요.');
+        }
+    });
+
     function getFieldPattern(field) {
         switch (field.id) {
             case 'bank-name':
             case 'bank_nickname':
             case 'case_item':
-            case 'suspect_key':
                 return /^[^!@#$%^&*(),.?":{}|<>]+$/;
             case 'bank_account':
                 return /^\d{11,14}$/;
@@ -123,7 +143,6 @@ document.addEventListener('DOMContentLoaded', function () {
             case 'bank-name':
             case 'bank_nickname':
             case 'case_item':
-            case 'suspect_key':
                 return '특수문자나 특수기호는 입력할 수 없습니다.';
             case 'bank_account':
                 return '계좌번호는 11자리에서 14자리여야 합니다.';
@@ -137,25 +156,4 @@ document.addEventListener('DOMContentLoaded', function () {
                 return '';
         }
     }
-
-    [bankName, bankAccount, bankNickname, suspectPhone, casePrice, caseItem, suspectKey, phishingUrl, caseDate, caseDescription].forEach(field => {
-        field.addEventListener('focus', function () {
-            validateField(field, getFieldPattern(field), getFieldMessage(field), field.id);
-        });
-
-        field.addEventListener('input', function () {
-            validateField(field, getFieldPattern(field), getFieldMessage(field), field.id);
-            submitBtn.disabled = !isFormValid();
-        });
-    });
-
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (isFormValid()) {
-            alert('양식이 제출되었습니다.');
-            // form.submit(); // 실제로 폼을 제출하려면 이 줄의 주석을 해제하세요
-        } else {
-            alert('양식을 다시 작성해주세요.');
-        }
-    });
 });
