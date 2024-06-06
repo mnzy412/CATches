@@ -15,7 +15,7 @@ db = pymysql.connect(
     db='catchesdb', 
     charset='utf8'
 )
-glbal_cursor = db.cursor()
+global_cursor = db.cursor()
 
 # 닉네임 생성 로직 수정
 nick_prefixes = ["더보이즈", "투바투", "엔시티", "스키즈", "제베원", "투어스", "라이즈", "보넥도", "뉴진스", "에스파"]
@@ -63,33 +63,43 @@ def login():
         remember = request.form.get('remember')
         
         try:
-            sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
             cursor = db.cursor()
+            sql = "SELECT * FROM users WHERE email = %s"
             cursor.execute(sql, (email,))
             user = cursor.fetchone()
-            
-            if user and check_password_hash(user[2], password):  # user[2]가 해시된 비밀번호라고 가정
-                session['user_id'] = user[0]  # user[0]이 사용자 ID라고 가정
-                session['user_nick'] = user[6]  # user[5]가 사용자 닉네임이라고 가정
-                session['user_email'] = user[1]  # user[1]이 사용자 이메일이라고 가정
-                if remember:
+
+            if user and check_password_hash(user[2], password):
+                user_status = user[5]
+                if user_status == 'deleted':  # user[5]는 상태(status)
+                    deleted_at = user[7]  # user[7]는 deleted_at 컬럼
+                    if deleted_at and (datetime.now() - deleted_at).days <= 3:
+                        # 3일 이내이면 상태를 active로 변경
+                        cursor.execute("UPDATE users SET status = 'active', deleted_at = NULL WHERE user_key = %s", (user[0],))
+                        db.commit()
+                        user_status = 'active'  # 상태 업데이트
+
+                if user_status == 'active':
+                    session['user_id'] = user[0]
+                    session['user_nick'] = user[6]
+                    session['user_email'] = user[1]
                     session.permanent = True
-                    bp.permanent_session_lifetime = timedelta(days=30)  # 30일 동안 세션 유지
-                #flash('로그인 성공!', 'success')
-                return redirect(url_for('main.index'))  # 로그인 성공 시 마이페이지로 리다이렉트
+                    session_lifetime = timedelta(days=30) if remember else timedelta(hours=1)
+                    session.permanent_session_lifetime = session_lifetime
+                    #flash('로그인 성공!', 'success')
+                    return redirect(url_for('main.index'))
+                else:
+                    flash('계정이 비활성화 상태입니다.', 'danger')
             else:
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
         except pymysql.MySQLError as e:
             flash(f"로그인 중 오류가 발생했습니다: {e}", 'danger')
-    
-    return render_template('user_login.html')
 
+    return render_template('user_login.html')
 @bp.route('/logout')
 def logout():
     session.pop('user_id', None)
     session.pop('user_nick', None)
     session.pop('user_email', None)
-    #flash('로그아웃되었습니다.', 'success')
     return redirect(url_for('main.index'))
 
 @bp.route('/mypage')
@@ -106,7 +116,6 @@ def mypage_case():
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
-    #return render_template('mypage_case.html')
 
     user_id = session['user_id']
 
@@ -121,7 +130,7 @@ def mypage_case():
         JOIN suspects s ON b.suspect_key = s.suspect_key 
         WHERE ci.user_key = %s
         """
-        cursor.execute(sql, (user_id))
+        cursor.execute(sql, (user_id,))
         cases = cursor.fetchall()
                 
         for case in cases:
@@ -140,16 +149,16 @@ def mypage_case():
         cursor.close()
             
     return render_template('mypage_case.html', cases=case_list)
-    
+
 @bp.route('/mypage/phishing')
 def mypage_phishing():  
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
-    #return render_template('mypage_phishing.html')
+
     user_id = session['user_id']
 
-    phishing_list = []  # phishing_list 초기화
+    phishing_list = []
     try:
         cursor = db.cursor()
         sql = """
@@ -230,7 +239,7 @@ def withdraw_confirm():
             sql = "UPDATE users SET status = 'deleted', deleted_at = %s WHERE user_key = %s"
             cursor.execute(sql, (datetime.now(), user_id))
             db.commit()
-            flash('회원 탈퇴가 성공적으로 처리되었습니다. 3일 내에 로그인하면 계정이 활성화됩니다.', 'success')
+            #flash('회원 탈퇴가 성공적으로 처리되었습니다. 3일 내에 로그인하면 계정이 활성화됩니다.', 'success')
             return redirect(url_for('main.logout'))
         except pymysql.MySQLError as e:
             db.rollback()
@@ -240,6 +249,7 @@ def withdraw_confirm():
 
     return redirect(url_for('main.user_withdraw'))
 
+
 @bp.route('/search/c')
 def case_search():
     return render_template('case_search.html')
@@ -248,14 +258,13 @@ def case_search():
 def phishing_search():
     return render_template('phishing_search.html')
 
-@bp.route('/case_info', methods = ["POST","GET"])
+@bp.route('/case_info', methods=["POST", "GET"])
 def case_info():
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
     
-    if request.method=='POST' :
-            
+    if request.method == 'POST':
         user_id = session['user_id']
         bank_name = request.form['bank_name']
         bank_account = request.form['bank_account']
@@ -272,9 +281,8 @@ def case_info():
         current_time = datetime.now()
         case_date = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
-        cursor = db.cursor()
-
         try:
+            cursor = db.cursor()
             # Suspect insertion
             suspect_sql = "INSERT INTO suspects (suspect_phone, suspect_status) VALUES (%s, 'unarrested');"
             cursor.execute(suspect_sql, (suspect_phone,))
@@ -306,21 +314,19 @@ def case_info():
             
             db.commit()
             flash('피해사례 등록이 성공적으로 완료되었습니다.', 'success')
-            return redirect(url_for('main.index'))  # 변경: url_for('main.index')로 수정합니다.
-            
+            return redirect(url_for('main.index'))
         except pymysql.MySQLError as e:
             db.rollback()
             flash(f"피해사례 등록 중 오류가 발생했습니다: {e}", 'danger')
-    elif request.method =='GET':
+    elif request.method == 'GET':
         return render_template('case_info.html')
 
-@bp.route('/phishing_info',methods=["POST","GET"])
+@bp.route('/phishing_info', methods=["POST", "GET"])
 def phishing_info():
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
     if request.method == 'POST':
-
         user_id = session['user_id']
         phishing_url = request.form['site_url']
         site_name = request.form['site_name']
@@ -343,15 +349,12 @@ def phishing_info():
 
             db.commit()
             flash('피싱사이트 등록이 성공적으로 완료되었습니다.', 'success')
-            return redirect(url_for('main.index'))  # 변경: url_for('main.index')로 수정합니다.
-
+            return redirect(url_for('main.index'))
         except pymysql.MySQLError as e:
             db.rollback()
             flash(f"피싱사이트 등록 중 오류가 발생했습니다: {e}", 'danger')
-
-    elif request.method =='GET':
+    elif request.method == 'GET':
         return render_template('phishing_info.html')
-
 
 @bp.route('/case_list', methods=['GET'])
 def case_list():
@@ -405,8 +408,6 @@ def case_list():
         flash(f"검색 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.case_search'))
 
-
-
 @bp.route('/case_detail/<int:case_key>')
 def case_detail(case_key):
     try:
@@ -424,13 +425,11 @@ def case_detail(case_key):
             LEFT JOIN polices po ON s.police_key = po.police_key
             WHERE i.case_key = %s
         """
-        # cursor = db.cursor()
-        cursor.execute(sql, (case_key))
+        cursor.execute(sql, (case_key,))
         case = cursor.fetchone()
-        print(case)
+
         if not case:
             flash("해당 사례를 찾을 수 없습니다.", 'danger')
-            print('응 사례없어')
             return redirect(url_for('main.case_list'))
 
         case_info = {
@@ -454,15 +453,13 @@ def case_detail(case_key):
             'police_name': case[17],
             'police_location': case[18]
         }
-        print("=========여까지됨")
+
         if case_info['suspect_status'] == 'arrested':
             return render_template('case_detail_arrested.html', case=case_info)
         else:
             return render_template('case_detail_unarrested.html', case=case_info)
 
     except pymysql.MySQLError as e:
-        print(f"상세 조회 중 오류가 발생했습니다: {e}", 'danger')
-
         flash(f"상세 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.case_list'))
 
@@ -470,16 +467,13 @@ def case_detail(case_key):
 def phishing_detail():
     phishing_key = request.args.get('phishing_key')
     phishing_info = request.args.get('phishingInfo')
-    # 현재 피싱키 기준으로 상세조회가 가능.
-    # 추후 사이트 이름 기반 검색기능 추가시 아래 sql 수정 필요
     try:
         cursor = db.cursor()
-        # 피싱 사이트 정보 조회
         sql = """
             SELECT pi.phishing_key, pi.phishing_url, pd.site_name, pd.site_type, pd.site_content, pi.phishing_date, pi.phishing_count
             FROM phishing_info pi
             JOIN phishing_detail pd ON pi.phishing_key = pd.phishing_key
-            WHERE pi.phishing_url = %s OR pd.site_name = %s OR pi.phishing_key=%s
+            WHERE pi.phishing_url = %s OR pd.site_name = %s OR pi.phishing_key = %s
         """
         cursor.execute(sql, (phishing_info, phishing_info, phishing_key))
         phishing_detail = cursor.fetchone()
@@ -507,7 +501,5 @@ def phishing_detail():
     
     except pymysql.MySQLError as e:
         db.rollback()
-        print(f"피싱 사이트 조회 중 오류가 발생했습니다: {e}", 'danger')
-
         flash(f"피싱 사이트 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.phishing_search'))
