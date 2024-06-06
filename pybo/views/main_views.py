@@ -506,6 +506,7 @@ def phishing_detail():
 
 @bp.route('/case_delete/<int:case_key>', methods=['POST'])
 def case_delete(case_key):
+    print('사례 삭제 시작')
     if 'user_id' not in session:
         flash('로그인이 필요합니다.', 'danger')
         return redirect(url_for('main.login'))
@@ -520,6 +521,14 @@ def case_delete(case_key):
         JOIN bank b ON ci.bank_key = b.bank_key
         WHERE ci.case_key = %s
         """
+
+        sql_bank_code = """
+        SELECT bc.bank_code
+        FROM bank_code bc
+        JOIN bank b ON bc.bank_code = b.bank_code
+        WHERE b.bank_key = %s
+        """
+
         cursor.execute(sql_get_keys, (case_key,))
         result = cursor.fetchone()
         if not result:
@@ -528,18 +537,28 @@ def case_delete(case_key):
 
         bank_key, platform_key, suspect_key = result
 
+        cursor.execute(sql_bank_code, (bank_key,))
+        bc_result = cursor.fetchone()
+        if not bc_result:
+            print('해당 뱅크 코드 없음')
+            return redirect(url_for('main.case_search'))
+
+        bank_code = bc_result[0]
+
         # 관련 데이터를 삭제
         sql_delete_case_detail = "DELETE FROM case_detail WHERE case_key = %s"
         sql_delete_case_info = "DELETE FROM case_info WHERE case_key = %s"
         sql_delete_bank = "DELETE FROM bank WHERE bank_key = %s"
         sql_delete_platform = "DELETE FROM platform WHERE platform_key = %s"
         sql_delete_suspect = "DELETE FROM suspects WHERE suspect_key = %s"
+        sql_delete_bank_code = "DELETE FROM bank_code WHERE bank_code = %s"
 
         cursor.execute(sql_delete_case_detail, (case_key,))
         cursor.execute(sql_delete_case_info, (case_key,))
         cursor.execute(sql_delete_bank, (bank_key,))
         cursor.execute(sql_delete_platform, (platform_key,))
         cursor.execute(sql_delete_suspect, (suspect_key,))
+        cursor.execute(sql_delete_bank_code, (bank_code,))
 
         db.commit()
         print('사례가 성공적으로 삭제되었습니다.', 'success')
