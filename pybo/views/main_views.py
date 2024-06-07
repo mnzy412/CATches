@@ -478,7 +478,7 @@ def case_detail(case_key):
             'police_location': case[18],
             'bank_name' : case[19]
         }
-        print(case[19])
+        print(case[5])
         if case_info['suspect_status'] == 'arrested':
             return render_template('case_detail_arrested.html', case=case_info)
         else:
