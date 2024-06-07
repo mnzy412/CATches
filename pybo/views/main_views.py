@@ -69,7 +69,7 @@ def login():
             user = cursor.fetchone()
 
             if user and check_password_hash(user[2], password):
-                user_status = user[5]
+                user_status = user[4]
                 if user_status == 'deleted':  # user[5]는 상태(status)
                     deleted_at = user[7]  # user[7]는 deleted_at 컬럼
                     if deleted_at and (datetime.now() - deleted_at).days <= 3:
@@ -78,7 +78,7 @@ def login():
                         db.commit()
                         user_status = 'active'  # 상태 업데이트
 
-                if user_status == 'active':
+                elif user_status == 'active':
                     session['user_id'] = user[0]
                     session['user_nick'] = user[6]
                     session['user_email'] = user[1]
