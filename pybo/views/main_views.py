@@ -437,9 +437,12 @@ def case_detail(case_key):
             SELECT i.case_key, b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status, 
                    s.suspect_phone, s.suspect_sex, s.suspect_age, s.suspect_credit, s.suspect_country, 
                    p.platform_name, p.platform_url, d.case_item, d.case_price, d.bank_date, d.case_content,
-                   po.police_name, po.police_location
+                   po.police_name, po.police_location,
+                   bc.bank_name
+
             FROM case_info i
             JOIN bank b ON i.bank_key = b.bank_key
+            JOIN bank_code bc ON b.bank_code = bc.bank_code
             JOIN case_detail d ON i.case_key = d.case_key
             JOIN suspects s ON b.suspect_key = s.suspect_key
             JOIN platform p ON i.platform_key = p.platform_key
@@ -452,7 +455,7 @@ def case_detail(case_key):
         if not case:
             flash("해당 사례를 찾을 수 없습니다.", 'danger')
             return redirect(url_for('main.case_list'))
-
+        print(case)
         case_info = {
             'case_key': case[0],
             'bank_account': case[1],
@@ -472,9 +475,10 @@ def case_detail(case_key):
             'bank_date': case[15],
             'case_content': case[16],
             'police_name': case[17],
-            'police_location': case[18]
+            'police_location': case[18],
+            'bank_name' : case[19]
         }
-
+        print(case[19])
         if case_info['suspect_status'] == 'arrested':
             return render_template('case_detail_arrested.html', case=case_info)
         else:
