@@ -207,24 +207,36 @@ def user_info():
 
 @bp.route('/withdraw', methods=['GET', 'POST'])
 def user_withdraw():
+    if 'user_id' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect(url_for('main.login'))
+
+    user_id = session['user_id']
+    user_email = session['user_email']
+
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        
+
+        if email != user_email:
+            flash('입력된 이메일이 로그인한 계정과 일치하지 않습니다.', 'danger')
+            return redirect(url_for('main.user_withdraw'))
+
         try:
             cursor = db.cursor()
             sql = "SELECT * FROM users WHERE email = %s AND status = 'active'"
             cursor.execute(sql, (email,))
             user = cursor.fetchone()
-            
+
             if user and check_password_hash(user[2], password):
                 return render_template('withdraw_confirm.html', email=email)
             else:
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
         except pymysql.MySQLError as e:
             flash(f"탈퇴 처리 중 오류가 발생했습니다: {e}", 'danger')
-    
+
     return render_template('user_withdraw.html')
+
 
 @bp.route('/withdraw_confirm', methods=['POST'])
 def withdraw_confirm():
