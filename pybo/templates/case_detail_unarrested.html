@@ -37,7 +37,7 @@
                 </div>
                 <div class="form-group">
                     <label for="bank_name" class="fixed-label">은행명</label>
-                    <input type="text" id="bank_name" name="bank_name" placeholder="xx은행" required aria-label="은행명"value = {{case.bank_name}} readonly>
+                    <input type="text" id="bank_name" name="bank_name" placeholder="xx은행" required aria-label="은행명" value = {{case.bank_name}} readonly>
                 </div>
                 <div class="form-group">
                     <label for="bank_account" class="fixed-label">계좌번호</label>
@@ -60,21 +60,12 @@
                     <input type="number" id="case_price" name="case_price" placeholder="1000000" required aria-label="입금 금액" value = {{case.case_price}} readonly>
                 </div>
                 <div class="form-group full-width">
-                    <label>피해 유형</label>
-                    <div class="radio-group">
-                        <label><input type="radio" id="online" name="case_type" value={{case.case_type}} disabled > 온라인</label>
-                        <label><input type="radio" id="offline" name="case_type" disabled value={{case.case_type}}> 오프라인</label>
-                        <label><input type="radio" id="etc" name="case_type" disabled value="etc"> 기타</label>
-                    </div>
+                    <label for="case_type" class="fixed-label">피해 유형</label>
+                    <input type="text" id="case_type" name="case_type" value = {{case.case_type}} readonly>
                 </div>
                 <div class="form-group full-width">
-                    <label>피해 발생 플랫폼 종류</label>
-                    <div class="radio-group">
-                        <label><input type="radio" id="sns" name="platform_type" disabled value="sns" checked> SNS</label>
-                        <label><input type="radio" id="market" name="platform_type" disabled value="market"> 중고거래</label>
-                        <label><input type="radio" id="webstore" name="platform_type" disabled value="webstore"> 웹스토어</label>
-                        <label><input type="radio" id="etc_platform" name="platform_type" disabled value="etc_platform"> 기타</label>
-                    </div>
+                    <label for="platform_type" class="fixed-label">피해 발생 플랫폼 종류</label>
+                    <input type="text" id="platform_type" name="platform_type" value = {{case.platform_type}} readonly>
                 </div>
                 <div class="form-group">
                     <label for="case_item" class="fixed-label">거래 물품명</label>

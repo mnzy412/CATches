@@ -437,9 +437,7 @@ def case_detail(case_key):
             SELECT i.case_key, b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status, 
                    s.suspect_phone, s.suspect_sex, s.suspect_age, s.suspect_credit, s.suspect_country, 
                    p.platform_name, p.platform_url, d.case_item, d.case_price, d.bank_date, d.case_content,
-                   po.police_name, po.police_location,
-                   bc.bank_name
-
+                   po.police_name, po.police_location, bc.bank_name, s.suspect_key
             FROM case_info i
             JOIN bank b ON i.bank_key = b.bank_key
             JOIN bank_code bc ON b.bank_code = bc.bank_code
@@ -455,7 +453,6 @@ def case_detail(case_key):
         if not case:
             flash("해당 사례를 찾을 수 없습니다.", 'danger')
             return redirect(url_for('main.case_list'))
-        print(case)
         case_info = {
             'case_key': case[0],
             'bank_account': case[1],
@@ -480,7 +477,36 @@ def case_detail(case_key):
         }
         print(case[5])
         if case_info['suspect_status'] == 'arrested':
-            return render_template('case_detail_arrested.html', case=case_info)
+            sql2 = """
+                SELECT p.police_name, p.police_location, s.suspect_sex, s.suspect_age, s.suspect_country, s.suspect_credit
+                FROM suspects s
+                JOIN polices p ON s.police_key = p.police_key
+                WHERE s.suspect_key = %s
+            """
+            cursor.execute(sql2, (case[20]))
+            case2 = cursor.fetchone()
+            print(case2)
+            if not case2:
+                print("사례 검거 정보가 없습니다.")
+                case2_info = {
+                    'police_name': "홍길동",
+                    'police_location': "노원",
+                    'suspect_sex': "여",
+                    'suspect_age': "30",
+                    'suspect_country': "한국",
+                    'suspect_credit': "3"
+                }
+            else:
+                case2_info = {
+                    'police_name': case2[0],
+                    'police_location': case2[1],
+                    'suspect_sex': case2[2],
+                    'suspect_age': case2[3],
+                    'suspect_country': case2[4],
+                    'suspect_credit': case2[5]
+                }
+
+            return render_template('case_detail_arrested.html', case=case_info, case2=case2_info)
         else:
             return render_template('case_detail_unarrested.html', case=case_info)
 
@@ -576,14 +602,19 @@ def case_delete(case_key):
         sql_delete_bank = "DELETE FROM bank WHERE bank_key = %s"
         sql_delete_platform = "DELETE FROM platform WHERE platform_key = %s"
         sql_delete_suspect = "DELETE FROM suspects WHERE suspect_key = %s"
-        sql_delete_bank_code = "DELETE FROM bank_code WHERE bank_code = %s"
 
         cursor.execute(sql_delete_case_detail, (case_key,))
         cursor.execute(sql_delete_case_info, (case_key,))
         cursor.execute(sql_delete_bank, (bank_key,))
         cursor.execute(sql_delete_platform, (platform_key,))
         cursor.execute(sql_delete_suspect, (suspect_key,))
-        cursor.execute(sql_delete_bank_code, (bank_code,))
+
+        sql_bank_code = "SELECT bank_key FROM bank WHERE bank_code = %s"
+        cursor.execute(sql_bank_code, (bank_code))
+        is_bc = cursor.fetchone()
+        if not is_bc:
+            sql_delete_bank_code = "DELETE FROM bank_code WHERE bank_code = %s"
+            cursor.execute(sql_delete_bank_code, (bank_code,))
 
         db.commit()
         print('사례가 성공적으로 삭제되었습니다.', 'success')
