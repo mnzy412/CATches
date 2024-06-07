@@ -269,7 +269,6 @@ def case_search():
 @bp.route('/search/p')
 def phishing_search():
     return render_template('phishing_search.html')
-
 @bp.route('/case_info', methods=["POST", "GET"])
 def case_info():
     if 'user_id' not in session:
@@ -295,6 +294,7 @@ def case_info():
 
         try:
             cursor = db.cursor()
+            
             # Suspect insertion
             suspect_sql = "INSERT INTO suspects (suspect_phone, suspect_status) VALUES (%s, 'unarrested');"
             cursor.execute(suspect_sql, (suspect_phone,))
@@ -305,10 +305,18 @@ def case_info():
             cursor.execute(platform_sql, (platform_name, platform_url, suspect_id))
             platform_pk = cursor.lastrowid
 
-            # Bank code insertion
-            bank_code_sql = "INSERT INTO bank_code (bank_name) VALUES (%s);"
+            # Check if the bank name already exists in bank_code
+            bank_code_sql = "SELECT bank_code FROM bank_code WHERE bank_name = %s"
             cursor.execute(bank_code_sql, (bank_name,))
-            bank_code_pk = cursor.lastrowid
+            bank_code_result = cursor.fetchone()
+
+            if bank_code_result:
+                bank_code_pk = bank_code_result[0]
+            else:
+                # If bank name does not exist, insert new bank code
+                bank_code_sql = "INSERT INTO bank_code (bank_name) VALUES (%s)"
+                cursor.execute(bank_code_sql, (bank_name,))
+                bank_code_pk = cursor.lastrowid
 
             # Bank insertion
             bank_sql = "INSERT INTO bank (suspect_key, bank_account, bank_nickname, bank_code) VALUES (%s, %s, %s, %s);"
@@ -332,6 +340,7 @@ def case_info():
             flash(f"피해사례 등록 중 오류가 발생했습니다: {e}", 'danger')
     elif request.method == 'GET':
         return render_template('case_info.html')
+
 
 @bp.route('/phishing_info', methods=["POST", "GET"])
 def phishing_info():
