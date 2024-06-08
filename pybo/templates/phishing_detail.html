@@ -54,7 +54,7 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="site_type" class="fixed-label">피해 유형</label>
-                    <input type="text" id="site_type" name="site_type" value="{{ phishing_data.site_type }}" readonly>
+                    <input type="text" id="site_type" name="site_type" value="{% if phishing_data.site_type == 'personal_info_leak' %}개인정보 유출{% elif phishing_data.site_type == 'malicious_code' %}악성코드 감염{% elif phishing_data.site_type == 'financial_damage' %}금전적 피해{% else %}기타{% endif %}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="site_content" class="fixed-label">사건 개요</label>
