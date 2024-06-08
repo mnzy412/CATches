@@ -80,6 +80,10 @@
                     <input type="url" id="phishing_url" name="phishing_url" placeholder="https://www.fraud.com/" required aria-label="사기 게시글 URL" value="{{case.platform_url}}" readonly>
                 </div>
                 <div class="form-group full-width">
+                    <label for="user_name" class="fixed-label">작성자</label>
+                    <input type="text" id="user_nick" name="user_nick" value="{{case.user_nick}}" readonly>
+                </div>
+                <div class="form-group full-width">
                     <label for="case_description" class="fixed-label">사건 개요</label>
                     <textarea id="case_description" name="case_description" rows="4" placeholder="어제 사기 당했어요... ㅜㅜ" required aria-label="사건 개요" readonly>{{case.case_content}}</textarea>
                 </div>

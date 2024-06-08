@@ -440,7 +440,7 @@ def case_detail(case_key):
             SELECT i.case_key, b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status, 
                    s.suspect_phone, s.suspect_sex, s.suspect_age, s.suspect_credit, s.suspect_country, 
                    p.platform_name, p.platform_url, d.case_item, d.case_price, d.bank_date, d.case_content,
-                   po.police_name, po.police_location, bc.bank_name, p.suspent_id
+                   po.police_name, po.police_location, bc.bank_name, p.suspent_id, u.user_nick
             FROM case_info i
             JOIN bank b ON i.bank_key = b.bank_key
             JOIN bank_code bc ON b.bank_code = bc.bank_code
@@ -448,6 +448,7 @@ def case_detail(case_key):
             JOIN suspects s ON b.suspect_key = s.suspect_key
             JOIN platform p ON i.platform_key = p.platform_key
             LEFT JOIN polices po ON s.police_key = po.police_key
+            JOIN users u ON i.user_key = u.user_key
             WHERE i.case_key = %s
         """
         cursor.execute(sql, (case_key,))
@@ -477,7 +478,8 @@ def case_detail(case_key):
             'police_name': case[17],
             'police_location': case[18],
             'bank_name': case[19],
-            'suspent_id': case[20]  # 추가된 필드
+            'suspent_id': case[20],
+            'user_nick': case[21]  # 작성자 이름 추가
         }
         print(case[5])
         if case_info['suspect_status'] == 'arrested':
@@ -526,9 +528,10 @@ def phishing_detail():
     try:
         cursor = db.cursor()
         sql = """
-            SELECT pi.phishing_key, pi.phishing_url, pd.site_name, pd.site_type, pd.site_content, pi.phishing_date, pi.phishing_count
+            SELECT pi.phishing_key, pi.phishing_url, pd.site_name, pd.site_type, pd.site_content, pi.phishing_date, pi.phishing_count, u.user_nick
             FROM phishing_info pi
             JOIN phishing_detail pd ON pi.phishing_key = pd.phishing_key
+            JOIN users u ON pi.user_key = u.user_key
             WHERE pi.phishing_url = %s OR pd.site_name = %s OR pi.phishing_key = %s
         """
         cursor.execute(sql, (phishing_info, phishing_info, phishing_key))
@@ -542,7 +545,8 @@ def phishing_detail():
                 'site_type': phishing_detail[3],
                 'site_content': phishing_detail[4],
                 'phishing_date': phishing_detail[5],
-                'phishing_count': phishing_detail[6]
+                'phishing_count': phishing_detail[6],
+                'user_nick': phishing_detail[7]  
             }
 
             # 조회 수 증가
@@ -559,6 +563,7 @@ def phishing_detail():
         db.rollback()
         flash(f"피싱 사이트 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.phishing_search'))
+
 
 @bp.route('/case_delete/<int:case_key>', methods=['POST'])
 def case_delete(case_key):

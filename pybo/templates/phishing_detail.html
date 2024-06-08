@@ -64,6 +64,10 @@
                     <label for="phishing_count" class="fixed-label">조회수</label>
                     <input type="text" id="phishing_count" name="phishing_count" value="{{ phishing_data.phishing_count }}" readonly>
                 </div>
+                <div class="form-group full-width">
+                    <label for="user_nick" class="fixed-label">작성자</label>
+                    <input type="text" id="user_nick" name="user_nick" value="{{ phishing_data.user_nick }}" readonly>
+                </div>
             </form>
             <div>
                 {% if 'user_id' in session %}
