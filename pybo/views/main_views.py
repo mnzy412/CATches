@@ -61,7 +61,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         remember = request.form.get('remember')
-        
+
         try:
             cursor = db.cursor()
             sql = "SELECT * FROM users WHERE email = %s"
@@ -70,7 +70,7 @@ def login():
 
             if user and check_password_hash(user[2], password):
                 user_status = user[5]
-                if user_status == 'deleted':  # user[5]는 상태(status)
+                if user_status == 'deleted':  # user[4]는 상태(status)
                     deleted_at = user[7]  # user[7]는 deleted_at 컬럼
                     if deleted_at and (datetime.now() - deleted_at).days <= 3:
                         # 3일 이내이면 상태를 active로 변경
@@ -78,7 +78,7 @@ def login():
                         db.commit()
                         user_status = 'active'  # 상태 업데이트
 
-                elif user_status == 'active':
+                if user_status == 'active':
                     session['user_id'] = user[0]
                     session['user_nick'] = user[6]
                     session['user_email'] = user[1]
@@ -93,6 +93,9 @@ def login():
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
         except pymysql.MySQLError as e:
             flash(f"로그인 중 오류가 발생했습니다: {e}", 'danger')
+
+    return render_template('user_login.html')
+
 
     return render_template('user_login.html')
 @bp.route('/logout')
@@ -437,7 +440,7 @@ def case_detail(case_key):
             SELECT i.case_key, b.bank_account, b.bank_nickname, d.case_type, i.case_date, s.suspect_status, 
                    s.suspect_phone, s.suspect_sex, s.suspect_age, s.suspect_credit, s.suspect_country, 
                    p.platform_name, p.platform_url, d.case_item, d.case_price, d.bank_date, d.case_content,
-                   po.police_name, po.police_location, bc.bank_name, s.suspect_key
+                   po.police_name, po.police_location, bc.bank_name, p.suspent_id
             FROM case_info i
             JOIN bank b ON i.bank_key = b.bank_key
             JOIN bank_code bc ON b.bank_code = bc.bank_code
@@ -473,7 +476,8 @@ def case_detail(case_key):
             'case_content': case[16],
             'police_name': case[17],
             'police_location': case[18],
-            'bank_name' : case[19]
+            'bank_name': case[19],
+            'suspent_id': case[20]  # 추가된 필드
         }
         print(case[5])
         if case_info['suspect_status'] == 'arrested':
@@ -483,7 +487,7 @@ def case_detail(case_key):
                 JOIN polices p ON s.police_key = p.police_key
                 WHERE s.suspect_key = %s
             """
-            cursor.execute(sql2, (case[20]))
+            cursor.execute(sql2, (case[20],))
             case2 = cursor.fetchone()
             print(case2)
             if not case2:
@@ -513,6 +517,7 @@ def case_detail(case_key):
     except pymysql.MySQLError as e:
         flash(f"상세 조회 중 오류가 발생했습니다: {e}", 'danger')
         return redirect(url_for('main.case_list'))
+
 
 @bp.route('/phishing_detail', methods=['GET'])
 def phishing_detail():
