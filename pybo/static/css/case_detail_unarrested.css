@@ -145,12 +145,11 @@ button[type="submit"] {
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
-    cursor: not-allowed; /* 비활성화된 버튼 스타일 */
+    cursor: pointer; /* 활성화된 버튼 스타일 */
     font-size: 1rem;
-    opacity: 0.6; /* 비활성화된 버튼 시각적 표시 */
+    opacity: 1; /* 활성화된 버튼 시각적 표시 */
 }
 
-/* 추가된 스타일 */
 form .form-group label {
     display: block;
     margin-bottom: 0.5rem;
@@ -187,9 +186,9 @@ form .radio-group input {
     border: none;
     padding: 0.8rem 2.0rem;
     border-radius: 4px;
-    cursor: not-allowed; /* 비활성화된 버튼 스타일 */
+    cursor: pointer; /* 활성화된 버튼 스타일 */
     font-size: 1rem;
-    opacity: 0.6; /* 비활성화된 버튼 시각적 표시 */
+    opacity: 1; /* 활성화된 버튼 시각적 표시 */
 }
 
 .submit-btn {
