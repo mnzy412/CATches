@@ -61,7 +61,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         remember = request.form.get('remember')
-        
+
         try:
             cursor = db.cursor()
             sql = "SELECT * FROM users WHERE email = %s"
@@ -69,8 +69,8 @@ def login():
             user = cursor.fetchone()
 
             if user and check_password_hash(user[2], password):
-                user_status = user[4]
-                if user_status == 'deleted':  # user[5]는 상태(status)
+                user_status = user[5]
+                if user_status == 'deleted':  # user[4]는 상태(status)
                     deleted_at = user[7]  # user[7]는 deleted_at 컬럼
                     if deleted_at and (datetime.now() - deleted_at).days <= 3:
                         # 3일 이내이면 상태를 active로 변경
@@ -78,7 +78,7 @@ def login():
                         db.commit()
                         user_status = 'active'  # 상태 업데이트
 
-                elif user_status == 'active':
+                if user_status == 'active':
                     session['user_id'] = user[0]
                     session['user_nick'] = user[6]
                     session['user_email'] = user[1]
@@ -93,6 +93,9 @@ def login():
                 flash('이메일 또는 비밀번호가 잘못되었습니다.', 'danger')
         except pymysql.MySQLError as e:
             flash(f"로그인 중 오류가 발생했습니다: {e}", 'danger')
+
+    return render_template('user_login.html')
+
 
     return render_template('user_login.html')
 @bp.route('/logout')
