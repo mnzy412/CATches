@@ -50,7 +50,7 @@
                 </div>
                 <div class="form-group">
                     <label for="suspect_phone" class="fixed-label">연락처</label>
-                    <input type="tel" id="suspect_phone" name="suspect_phone" placeholder="01012345678" required aria-label="연락처" value="{{case.suspect_phone}}" readonly>
+                    <input type="tel" id="suspect_phone" name="suspect_phone"  required aria-label="연락처" value="{{case.suspect_phone}}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="case_date" class="fixed-label">입금일</label>
@@ -70,15 +70,15 @@
                 </div>
                 <div class="form-group">
                     <label for="case_item" class="fixed-label">거래 물품명</label>
-                    <input type="text" id="case_item" name="case_item" placeholder="티켓" required aria-label="거래 물품명" value="{{case.case_item}}" readonly>
+                    <input type="text" id="case_item" name="case_item"  required aria-label="거래 물품명" value="{{case.case_item}}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="suspent_id" class="fixed-label">용의자 사용 ID</label>
-                    <input type="text" id="suspent_id" name="suspent_id" placeholder="@imfraud" required aria-label="용의자 사용 ID" value="{{case.suspent_id}}" readonly>
+                    <input type="text" id="suspent_id" name="suspent_id" required aria-label="용의자 사용 ID" value="{{case.suspent_id}}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="phishing_url" class="fixed-label">사기 게시글 URL</label>
-                    <input type="url" id="phishing_url" name="phishing_url" placeholder="https://www.fraud.com/" required aria-label="사기 게시글 URL" value="{{case.platform_url}}" readonly>
+                    <input type="url" id="phishing_url" name="phishing_url" required aria-label="사기 게시글 URL" value="{{case.platform_url}}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="user_name" class="fixed-label">작성자</label>
@@ -86,7 +86,7 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="case_description" class="fixed-label">사건 개요</label>
-                    <textarea id="case_description" name="case_description" rows="4" placeholder="어제 사기 당했어요... ㅜㅜ" required aria-label="사건 개요" readonly>{{case.case_content}}</textarea>
+                    <textarea id="case_description" name="case_description" rows="4" required aria-label="사건 개요" readonly>{{case.case_content}}</textarea>
                 </div>
             </form>
             <div>

@@ -37,79 +37,79 @@
                 </div>
                 <div class="form-group">
                     <label for="police_name" class="fixed-label">담당 경찰</label>
-                    <input type="text" id="police_name" name="police_name" placeholder="홍길동" required aria-label="담당 경찰" value="{{case2.police_name}}" readonly>
+                    <input type="text" id="police_name" name="police_name" placeholder="정보 모름" required aria-label="담당 경찰" value="{{ case2.police_name or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="police_location" class="fixed-label">관할지역</label>
-                    <input type="text" id="police_location" name="police_location" placeholder="서울" required aria-label="관할지역" value="{{case2.police_location}}" readonly>
+                    <input type="text" id="police_location" name="police_location" placeholder="정보 모름" required aria-label="관할지역" value="{{ case2.police_location or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="bank_nickname" class="fixed-label">명의자 성명</label>
-                    <input type="text" id="bank_nickname" name="bank_nickname" placeholder="김철수" required aria-label="명의자 성명" value="{{case.bank_nickname}}" readonly>
+                    <input type="text" id="bank_nickname" name="bank_nickname" placeholder="정보 모름" required aria-label="명의자 성명" value="{{ case.bank_nickname or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="suspect_phone" class="fixed-label">연락처</label>
-                    <input type="tel" id="suspect_phone" name="suspect_phone" placeholder="01012345678" required aria-label="연락처" value="{{case.suspect_phone}}" readonly>
+                    <input type="tel" id="suspect_phone" name="suspect_phone" placeholder="정보 모름" required aria-label="연락처" value="{{ case.suspect_phone or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="gender" class="fixed-label">성별</label>
-                    <input type="text" id="gender" name="gender" placeholder="남" required aria-label="성별" value="{{case2.suspect_sex}}" readonly>
+                    <input type="text" id="gender" name="gender" placeholder="정보 모름" required aria-label="성별" value="{{ case2.suspect_sex or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="age" class="fixed-label">나이</label>
-                    <input type="text" id="age" name="age" placeholder="30" required aria-label="나이" value="{{case2.suspect_age}}" readonly>
+                    <input type="text" id="age" name="age" placeholder="정보 모름" required aria-label="나이" value="{{ case2.suspect_age or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="nationality" class="fixed-label">국적</label>
-                    <input type="text" id="nationality" name="nationality" placeholder="한국" required aria-label="국적" value="{{case2.suspect_country}}" readonly>
+                    <input type="text" id="nationality" name="nationality" placeholder="정보 모름" required aria-label="국적" value="{{ case2.suspect_country or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="credit_rating" class="fixed-label">신용등급</label>
-                    <input type="text" id="credit_rating" name="credit_rating" placeholder="1" required aria-label="신용등급" value="{{case2.suspect_credit}}" readonly>
+                    <input type="text" id="credit_rating" name="credit_rating" placeholder="정보 모름" required aria-label="신용등급" value="{{ case2.suspect_credit or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="bank_name" class="fixed-label">은행명</label>
-                    <input type="text" id="bank_name" name="bank_name" placeholder="xx은행" required aria-label="은행명" value="{{case.bank_name}}" readonly>
+                    <input type="text" id="bank_name" name="bank_name" placeholder="정보 모름" required aria-label="은행명" value="{{ case.bank_name or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="bank_account" class="fixed-label">계좌번호</label>
-                    <input type="text" id="bank_account" name="bank_account" placeholder="0000000000000000" required aria-label="계좌번호" value="{{case.bank_account}}" readonly>
+                    <input type="text" id="bank_account" name="bank_account" placeholder="정보 모름" required aria-label="계좌번호" value="{{ case.bank_account or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="case_date" class="fixed-label">입금일</label>
-                    <input type="date" id="case_date" name="case_date" required aria-label="입금일" value="{{case.bank_date}}" readonly>
+                    <input type="date" id="case_date" name="case_date" required aria-label="입금일" value="{{ case.bank_date or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="case_price" class="fixed-label">입금 금액</label>
-                    <input type="number" id="case_price" name="case_price" placeholder="1000000" required aria-label="입금 금액" value="{{case.case_price}}" readonly>
+                    <input type="number" id="case_price" name="case_price" placeholder="정보 모름" required aria-label="입금 금액" value="{{ case.case_price or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="case_type" class="fixed-label">피해 유형</label>
-                    <input type="text" id="case_type" name="case_type" value="{{ case.case_type }}" readonly>
+                    <input type="text" id="case_type" name="case_type" value="{{ case.case_type or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="platform_type" class="fixed-label">피해 발생 플랫폼 종류</label>
-                    <input type="text" id="platform_type" name="platform_type" value="{{ case.platform_name }}" readonly>
+                    <input type="text" id="platform_type" name="platform_type" value="{{ case.platform_name or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="case_item" class="fixed-label">거래 물품명</label>
-                    <input type="text" id="case_item" name="case_item" placeholder="티켓" required aria-label="거래 물품명" value="{{case.case_item}}" readonly>
+                    <input type="text" id="case_item" name="case_item" placeholder="정보 모름" required aria-label="거래 물품명" value="{{ case.case_item or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="suspent_id" class="fixed-label">용의자 사용 ID</label>
-                    <input type="text" id="suspent_id" name="suspent_id" placeholder="@imfraud" required aria-label="용의자 사용 ID" value="{{case.suspent_id}}" readonly>
+                    <input type="text" id="suspent_id" name="suspent_id" placeholder="정보 모름" required aria-label="용의자 사용 ID" value="{{ case.suspent_id or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="phishing_url" class="fixed-label">사기 게시글 URL</label>
-                    <input type="url" id="phishing_url" name="phishing_url" placeholder="https://www.fraud.com/" required aria-label="사기 게시글 URL" value="{{case.platform_url}}" readonly>
+                    <input type="url" id="phishing_url" name="phishing_url" placeholder="정보 모름" required aria-label="사기 게시글 URL" value="{{ case.platform_url or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="user_nick" class="fixed-label">작성자</label>
-                    <input type="text" id="user_nick" name="user_nick" value="{{case.user_nick}}" readonly>
+                    <input type="text" id="user_nick" name="user_nick" value="{{ case.user_nick or '정보 모름' }}" readonly>
                 </div>
                 <div class="form-group full-width">
                     <label for="case_description" class="fixed-label">사건 개요</label>
-                    <textarea id="case_description" name="case_description" rows="4" placeholder="어제 사기 당했어요... ㅜㅜ" required aria-label="사건 개요" readonly>{{case.case_content}}</textarea>
+                    <textarea id="case_description" name="case_description" rows="4" placeholder="정보 모름" required aria-label="사건 개요" readonly>{{ case.case_content or '정보 모름' }}</textarea>
                 </div>
             </form>
             <div>
