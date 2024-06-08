@@ -226,3 +226,9 @@ label[for="platform_type"] {
 .form-group.full-width > label {
     font-weight: bold;
 }
+
+.date {
+    font-weight: 600;
+    color: rgba(120, 19, 192, 1);
+    
+}

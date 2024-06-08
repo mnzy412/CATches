@@ -226,4 +226,8 @@ label[for="platform_type"] {
     font-weight: bold;
 }
 
-
+.date {
+    font-weight: 600;
+    color: rgba(120, 19, 192, 1);
+    
+}
