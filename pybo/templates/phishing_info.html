@@ -11,33 +11,33 @@
 </head>
 <body>
     {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flashes">
-                    {% for category, message in messages %}
-                        <li class="{{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            {% endwith %}
-            <header class="header">
-                <div class="catches-logo" id="logo"></div>
-                    <div class=header-wrapper>
-                        <ul>
-                            <li><a href="{{ url_for('main.index') }}">홈</a></li>
-                            <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
-                            <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
-                            <span class="li-color"><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></span>
-                            <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
-                        </ul>
-                        <div class="login-btn">
-                            {% if 'user_id' in session %}
-                                <span class="login-text"><a href="{{ url_for('main.mypage') }}">마이페이지</a></span>
-                            {% else %}
-                                <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
-                            {% endif %}
-                        </div>
-                    </div>
-            </header>
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <header class="header">
+        <div class="catches-logo" id="logo"></div>
+        <div class="header-wrapper">
+            <ul>
+                <li><a href="{{ url_for('main.index') }}">홈</a></li>
+                <li><a href="{{ url_for('main.case_info') }}">피해 사례 등록</a></li>
+                <li><a href="{{ url_for('main.case_search') }}">피해 사례 조회</a></li>
+                <span class="li-color"><a href="{{ url_for('main.phishing_info') }}">피싱 사이트 등록</a></span>
+                <li><a href="{{ url_for('main.phishing_search') }}">피싱 사이트 조회</a></li>
+            </ul>
+            <div class="login-btn">
+                {% if 'user_id' in session %}
+                    <span class="login-text"><a href="{{ url_for('main.mypage') }}">마이페이지</a></span>
+                {% else %}
+                    <span class="login-text"><a href="{{ url_for('main.login') }}">로그인</a></span>
+                {% endif %}
+            </div>
+        </div>
+    </header>
     <main class="main-content">
         <section>
             <h1>피싱 사이트 등록</h1>
@@ -51,10 +51,6 @@
                     <input type="text" id="site_name" name="site_name" placeholder="CATcheese" required aria-label="피싱 사이트 이름">
                 </div>
                 <div class="form-group full-width">
-                    <label for="case_date" class="fixed-label">입금일</label>
-                    <input type="date" id="case_date" name="case_date" required aria-label="입금일">
-                </div>
-                <div class="form-group full-width">
                     <label><strong>피해 유형</strong></label>
                     <div class="radio-group">
                         <label><input type="radio" id="personal_info_leak" name="case_type" value="personal_info_leak" checked> 개인정보 유출</label>
@@ -65,9 +61,9 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="site_content" class="fixed-label">사건 개요</label>
-                    <textarea id="site_content" name="site_content" rows="10" placeholder="catches인 줄 알았는데 catcheese예요!!" required aria-label="사건 개요"></textarea>
+                    <textarea id="site_content" name="site_content" rows="10" placeholder="catches인 줄 알았는데 catcheese예요!!" aria-label="사건 개요"></textarea>
                 </div>
-                <button type="submit" class="submit-btn" id="InfoSubmitBtn">피싱 사이트 등록하기</button>
+                <button type="submit" class="submit-btn" id="InfoSubmitBtn" disabled>피싱 사이트 등록하기</button>
             </form>
         </section>
     </main>

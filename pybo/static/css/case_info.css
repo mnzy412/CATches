@@ -137,9 +137,18 @@ button[type="submit"] {
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
-    cursor: not-allowed; /* 비활성화된 버튼 스타일 */
     font-size: 1rem;
     opacity: 0.6; /* 비활성화된 버튼 시각적 표시 */
+    cursor: default; /* 금지 표시 대신 기본 커서 */
+}
+
+button[type="submit"]:not(:disabled) {
+    cursor: pointer;
+    background-color: rgba(120, 19, 192, 1);
+}
+
+button[type="submit"]:not(:disabled):hover {
+    background-color: #60109A;
 }
 
 /* 추가된 스타일 */
@@ -179,9 +188,9 @@ form .radio-group input {
     border: none;
     padding: 0.8rem 2.0rem;
     border-radius: 4px;
-    cursor: not-allowed; /* 비활성화된 버튼 스타일 */
     font-size: 1rem;
     opacity: 0.6; /* 비활성화된 버튼 시각적 표시 */
+    cursor: default; /* 금지 표시 대신 기본 커서 */
 }
 
 label[for="case_type"], 
@@ -208,29 +217,32 @@ label[for="platform_type"] {
 
 .submit-btn {
     grid-column: span 2;
-    background-color: #7813C0;
+    background-color: #CCCCCC; /* 기본 비활성화 색상 */
     color: white;
     padding: 20px 0;
     border: none;
     border-radius: 5px;
     font-size: 18px;
     font-weight: 700;
-    cursor: pointer;
+    cursor: default; /* 기본 커서 */
     width: 100%; /* 최대 너비 설정 */
     margin-top: 30px; /* 여백 추가 */
     display: block;
-    margin-left: auto; /* 오른쪽으로 정렬 */
+    margin-left: auto; /* 가운데 정렬 */
     margin-right: auto; /* 가운데 정렬 */
-    display: block;
+}
+
+.submit-btn:not(:disabled) {
+    background-color: #7813C0; /* 활성화된 상태의 색상 */
+    cursor: pointer;
+}
+
+.submit-btn:not(:disabled):hover {
+    background-color: #60109A;
 }
 
 .submit-btn:disabled {
-    background-color: #CCCCCC; /* 비활성화 시 회색으로 보이도록 설정 */
-    cursor: not-allowed; 
-}
-
-.submit-btn:hover {
-    background-color: #60109A;
+    background-color: #CCCCCC; /* 비활성화 상태에서 커서 올려도 회색 유지 */
 }
 
 .error-message {

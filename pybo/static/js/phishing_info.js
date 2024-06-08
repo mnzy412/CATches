@@ -9,9 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const errorMessages = {
         'site_url': document.createElement('div'),
-        'site_name': document.createElement('div'),
-        'case_date': document.createElement('div'),
-        'site_content': document.createElement('div')
+        'site_name': document.createElement('div')
     };
 
     // 각 필드에 오류 메시지 요소를 추가
@@ -63,12 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (fieldId === 'site_name' && isFieldEmpty(field)) {
             showErrorMessage(fieldId, '피싱 사이트 이름을 입력해주세요.');
             valid = false;
-        } else if (fieldId === 'case_date' && isFieldEmpty(field)) {
-            showErrorMessage(fieldId, '입금일을 선택해주세요.');
-            valid = false;
-        } else if (fieldId === 'site_content' && isFieldEmpty(field)) {
-            showErrorMessage(fieldId, '사건 개요를 입력해주세요.');
-            valid = false;
         }
 
         if (valid) {
@@ -80,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function validateForm() {
         let valid = true;
-        [siteUrl, siteName, caseDate, siteContent].forEach(field => {
+        [siteUrl, siteName].forEach(field => {
             if (!validateField(field)) {
                 valid = false;
             }
@@ -92,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.disabled = !validateForm();
     }
 
-    [siteUrl, siteName, caseDate, siteContent].forEach(field => {
+    [siteUrl, siteName].forEach(field => {
         field.addEventListener('input', function () {
             clearErrorMessage(field.id);
             toggleSubmitButton();
@@ -106,8 +98,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 field.setAttribute('title', '피싱 사이트 URL을 입력해주세요.');
             } else if (field.id === 'site_name') {
                 field.setAttribute('title', '피싱 사이트 이름을 입력해주세요.');
-            } else if (field.id === 'site_content') {
-                field.setAttribute('title', '사건 개요를 입력해주세요.');
             }
         });
     });
@@ -121,4 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('양식을 다시 작성해주세요.');
         }
     });
+
+    toggleSubmitButton(); // 초기 로드 시 버튼 상태 설정
 });
