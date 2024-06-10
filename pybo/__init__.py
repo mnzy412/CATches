@@ -45,6 +45,8 @@ def create_app():
                 db = get_db()
                 cursor = db.cursor()
                 sql = "SELECT user_key FROM users WHERE status = 'deleted' AND TIMESTAMPDIFF(MINUTE, deleted_at, NOW()) >= 1"
+                #TIMESTAMPDIFF(DAY, deleted_at, NOW()) >= 3 
+                #테스트를 위해 1분으로 설정 
                 cursor.execute(sql)
                 deleted_users = cursor.fetchall()
 
